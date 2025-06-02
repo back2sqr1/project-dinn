@@ -1,16 +1,19 @@
+
+"use client";
+
 export default function Home() {
   return (
     <section id="screen-1">
       <article>
           <header>
-              <h2>SCREEN 1</h2>
+              <h1>Project Dinn</h1>
           </header>
+          <hr />
+          <h2 className="!mb-1">Belief Diagram Input: </h2>
           <div className="content">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas rerum fugit ea, corrupti repellendus reprehenderit quos, illum pariatur nihil, cumque eaque omnis! Saepe corporis quos itaque repellendus enim nam impedit.
+            Input the belief diagram file below. The file should be a text file containing the belief diagram data in the specified format.
           </div>
-          <figure>
-              <img src="url_illustration" alt="alt text for illustration"/>
-          </figure>
+          <input className="file-input" type="file" id="belief-diagram-file-input" accept=".txt" />
       </article>
     </section>
   );
