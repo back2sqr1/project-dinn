@@ -1,0 +1,39 @@
+{
+    "author": "David Zhang",
+    "institution": "Texas A&M University",
+    "title": "Belief Diagram 1 (Marylin Diptych Painting)",
+    "query": "Is the Diptych in loc15?",
+    "nodes" : {
+        "a" : {
+            "question": "Is the Diptych in loc06?",
+            "properties": [
+                "isInLocation(loc06)"
+            ]
+        },
+        "b" :{
+            "question": "Is the Diptych in loc08?",
+            "properties": [
+                "isInLocation(loc08)"
+            ]
+        },
+        "c" : {
+            "question":"Is the Diptych in loc07?",
+            "properties": [
+                "isInLocation(loc07)"
+            ]
+        },
+        "d" : {
+            "question" : "No",
+            "terminal": true
+        },
+        "e" : {
+            "question" : "Yes",
+            "terminal": true
+        }
+    },
+    "edges" : {
+        "a" : ["b", "d"],
+        "b" : ["c", "d"],
+        "c" : ["e", "d"]
+    }
+}

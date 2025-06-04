@@ -9,9 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hpcc-js/wasm": "^2.22.4",
+    "@ts-graphviz/react": "^0.10.6",
+    "graphviz-react": "^1.2.5",
     "next": "15.3.3",
+    "nextjs-simple-typewriter": "^5.2.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "ts-graphviz": "^2.1.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
