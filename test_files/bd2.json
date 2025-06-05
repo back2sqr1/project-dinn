@@ -1,0 +1,40 @@
+{
+    "author": "David Zhang",
+    "institution": "Texas A&M University",
+    "title": "Belief Diagram 2 (Lights)",
+    "query": "Is the light on?",
+    "size" : [100, 800],
+    "nodes" : {
+        "a" : {
+            "question": "Is there a person in the room?",
+            "properties": [
+                "isPerson()",
+                "isLight()"
+            ]
+        },
+        "b" :{
+            "question": "Is the light switch on?",
+            "properties": [
+                "isLight()"
+            ]
+        },
+        "c" : {
+            "question":"Is there coffee?",
+            "properties": [
+                "isCoffee()"
+            ]
+        },
+        "d" : {
+            "question" : "No",
+            "terminal": true
+        },
+        "e" : {
+            "question" : "Yes",
+            "terminal": true
+        }
+    },
+    "edges" : {
+        "a" : ["b", "e"],
+        "b" : ["d", "e"]
+    }
+}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Digraph, Node, Edge, toDot } from 'ts-graphviz';
 import { Typewriter } from 'nextjs-simple-typewriter'
+import Link from 'next/link';
 
 const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
 
@@ -93,34 +94,46 @@ export default function Home() {
     }
   };
   return (
-    <section id="screen-1">
-      <article>
-          <header>
-              <h1>Belief Diagram Input</h1>
-          </header>
-          <hr />
-          <Typewriter
-            words={['Input the belief diagram file below. The file should be a text file containing the belief diagram data in the specified format.']}
-            loop={1}
-            cursor
-            cursorStyle=''
-            typeSpeed={50}
-            deleteSpeed={50}
-            delaySpeed={1000}
-          />
-          <br/>
-          
-          <input className="file-input" type="file" id="belief-diagram-file-input" accept=".json" onChange={handleFileChange} />
+    <div className ="retro-container relative ">
+      <section id="screen-1">
+        <article>
+            <header>
+                <h1><Typewriter
+              words={['Belief Diagram']}
+              loop={1}
+              cursor
+              cursorStyle=''
+              typeSpeed={50}
+              deleteSpeed={50}
+              delaySpeed={1000}
+            /></h1>
+            </header>
+            <hr />
+            <Typewriter
+              words={['Input the belief diagram file below. The file should be a text file containing the belief diagram data in the specified format.']}
+              loop={1}
+              cursor
+              cursorStyle=''
+              typeSpeed={30}
+              deleteSpeed={50}
+              delaySpeed={1000}
+            />
+            <br/>
+            
+            <input className="file-input" type="file" id="belief-diagram-file-input" accept=".json" onChange={handleFileChange} />
 
-          {parsedData && (
-            <div className="output">
-              <h2>Belief Diagram Output</h2>
-              <Graphviz dot={toDot(graph)} />
-            </div>
-          )}
+            {parsedData && (
+              <div className="output">
+                <h2>Belief Diagram Output</h2>
+                <Graphviz dot={toDot(graph)} />
 
-          
-      </article>
-    </section>
+              </div>
+            )}   
+        </article>
+        <span className = "absolute right-1 bottom-0">
+          <Link href="/belief-graph">next</Link>
+        </span>
+      </section>
+    </div>
   );
 }

@@ -1,0 +1,26 @@
+/* Filter to convert red to green and yellow to light green */
+.color-filter {
+    filter: hue-rotate(90deg) saturate(1.5);
+}
+
+/* Alternative approach using more specific color adjustments */
+.red-to-green-filter {
+    filter: 
+        hue-rotate(140deg) /* Rotates red more towards green */
+        brightness(1.1)
+        contrast(1.05);
+}
+
+/* For more precise control, you can use multiple filters */
+.gif-color-swap {
+    filter: 
+        hue-rotate(90deg)    /* More green shift */
+        saturate(1.2)        /* Increased saturation for more vibrant green */
+        brightness(1.1)      /* Brightens the result */
+        contrast(1.02);      /* Slight contrast adjustment */
+}
+
+/* Apply to gif elements */
+.car_gif {
+    filter: hue-rotate(90deg) saturate(1.2) brightness(1.1);
+}
