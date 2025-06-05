@@ -10,27 +10,32 @@
             "properties": [
                 "isPerson()",
                 "isLight()"
-            ]
+            ],
+            "location" : [50, 50]
         },
         "b" :{
             "question": "Is the light switch on?",
             "properties": [
                 "isLight()"
-            ]
+            ],
+            "location" : [100, 800]
         },
         "c" : {
             "question":"Is there coffee?",
             "properties": [
                 "isCoffee()"
-            ]
+            ],
+            "location" : [50, 150]
         },
         "d" : {
             "question" : "No",
-            "terminal": true
+            "terminal": true,
+            "location" : [0, 0]
         },
         "e" : {
             "question" : "Yes",
-            "terminal": true
+            "terminal": true,
+            "location" : [0, 0]
         }
     },
     "edges" : {

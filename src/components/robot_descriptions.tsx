@@ -4,55 +4,45 @@ import car_gif from '@/assets/Spinning Car Gif.gif'
 import Image from 'next/image';
 import '@/styles/car_design.css';
 
-interface Robot {
-    id: string;
-    name: string;
-    model: string;
-    location: [number, number];
-    velocity: [number];
-}
-
-interface RobotDescriptionsProps {
-    robot_count: number;
-}
+import { Robot, RobotDescriptionsProps } from '@/utils/robot_interface';
 
 const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) => {
     const [robots, setRobots] = useState<Robot[]>([]);
 
-    // Initialize or update robots when count changes
     useEffect(() => {
-        // Try to load robots from localStorage
         const savedRobots = localStorage.getItem('robots');
         let parsedRobots: Robot[] = [];
         
         if (savedRobots) {
             parsedRobots = JSON.parse(savedRobots);
         }
+        else {
+            parsedRobots = Array.from({ length: robot_count }, (_, index) => ({
+                id: `robot-${index + 1}`,
+                location: [0, 0],
+                velocity: 1,
+            }));
+        }
         
-        // If we need more robots than we have saved, create new ones
         setRobots(parsedRobots.slice(0, robot_count));
     }, [robot_count]);
 
-    // Save robots to localStorage whenever they change
     useEffect(() => {
         if (robots.length > 0) {
             localStorage.setItem('robots', JSON.stringify(robots));
         }
     }, [robots]);
 
-    // Handle changes to robot properties
     const handleRobotChange = (index: number, field: keyof Robot, value: any) => {
         const updatedRobots = [...robots];
+        console.log("UpdatedRobots:", updatedRobots);
         
         if (field === 'location') {
-            // Handle location as a special case since it's an array
             const [axis, val] = value;
             updatedRobots[index][field][axis] = parseFloat(val);
         } else if (field === 'velocity') {
-            // Handle velocity as a special case since it's an array
-            updatedRobots[index][field][0] = parseFloat(value);
+            updatedRobots[index][field] = parseFloat(value);
         } else {
-            // Handle string fields
             updatedRobots[index][field] = value;
         }
         
@@ -75,49 +65,32 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
                         className="p-1 rounded"
                     />
                     <br/>
-
-                    <label className="font-bold">Name: </label>
-                    <input
-                        type="text"
-                        value={robots[index]?.name || ''}
-                        onChange={(e) => handleRobotChange(index, 'name', e.target.value)}
-                        className="p-1 rounded"
-                    />
-                    
-                    <br/>
-
-                    <label className="font-bold">Model: </label>
-                    <input
-                        type="text"
-                        value={robots[index]?.model || ''}
-                        onChange={(e) => handleRobotChange(index, 'model', e.target.value)}
-                        className="p-1 rounded"
-                    />
-                    <br/>
                         
                     <div className="flex">
                         <label className="font-bold w-17">Location: </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={robots[index]?.location[0] || 0}
-                            onChange={(e) => handleRobotChange(index, 'location', [0, e.target.value])}
-                            className="p-1 rounded w-8"
-                        />
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={robots[index]?.location[1] || 0}
-                            onChange={(e) => handleRobotChange(index, 'location', [1, e.target.value])}
-                            className="p-1 rounded w-8"
-                        />
+                        <div className = "flex gap-2"> 
+                            <input
+                                type="number"
+                                step="1"
+                                value={robots[index]?.location[0] || 0}
+                                onChange={(e) => handleRobotChange(index, 'location', [0, e.target.value])}
+                                className="p-1 rounded w-10"
+                            />
+                            <input
+                                type="number"
+                                step="1"
+                                value={robots[index]?.location[1] || 0}
+                                onChange={(e) => handleRobotChange(index, 'location', [1, e.target.value])}
+                                className="p-1 rounded w-10"
+                            />
+                        </div>
                     </div>
                     
                     <label className="font-bold">Velocity: </label>
                     <input
                         type="number"
-                        step="0.01"
-                        value={robots[index]?.velocity[0] || 0}
+                        step="1"
+                        value={robots[index]?.velocity || 1}
                         onChange={(e) => handleRobotChange(index, 'velocity', e.target.value)}
                         className="p-1 rounded"
                     />
