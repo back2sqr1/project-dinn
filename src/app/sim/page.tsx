@@ -13,24 +13,9 @@ import { parse } from 'path';
 const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
 
 import AsciiAnimation from '@/components/AsciiAnimation';
+import generateFrames from '@/utils/generateFrames';
 
-const frames = [
-  `
-   (o_o)
-  <)   )\\
-   "" ""
-  `,
-  `
-   (O_O)
-  <)   )\\
-   "" ""
-  `,
-  `
-   (x_x)
-  <)   )\\
-   "" ""
-  `,
-];
+
 
 
 export default function Home() {
@@ -42,7 +27,8 @@ export default function Home() {
   const [parsedData, setParsedData] = useState<any>(null);
   const [graph, setGraph] = useState<any>();
   const [robots, setRobots] = useState<any[]>([]);
-  
+  const searchtree = search(parsedData, graph, robots);
+  const frames = generateFrames(parsedData, graph, robots);
   {
     useEffect(() => {
       const savedParsedData = localStorage.getItem('parsedData');
@@ -50,7 +36,7 @@ export default function Home() {
       
       if (savedParsedData) {
         const parsedDataObj = JSON.parse(savedParsedData);
-        setParsedData(JSON.stringify(parsedDataObj, null, 2));
+        setParsedData(parsedDataObj);
         const newGraph = createGraphFromBeliefDiagram(parsedDataObj);
         setGraph(newGraph);
 
@@ -91,7 +77,8 @@ export default function Home() {
         <hr />
 
         <article>
-          <div className="p-2">
+          <br/>
+          <div className="p-2 justify-center text-center ">
             <AsciiAnimation
               frames={frames}
               frameRate={2}
@@ -102,7 +89,7 @@ export default function Home() {
 
       </section>
       <span className = "absolute right-1 bottom-0">
-        <Link href="/anim">next</Link>
+        <Link href="/references">next</Link>
       </span>
     </div>
   );

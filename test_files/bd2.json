@@ -3,7 +3,8 @@
     "institution": "Texas A&M University",
     "title": "Belief Diagram 2 (Lights)",
     "query": "Is the light on?",
-    "size" : [100, 800],
+    "size" : [80, 10],
+    "starting_question": "a",
     "nodes" : {
         "a" : {
             "question": "Is there a person in the room?",
@@ -11,21 +12,21 @@
                 "isPerson()",
                 "isLight()"
             ],
-            "location" : [50, 50]
+            "location" : [5, 5]
         },
         "b" :{
             "question": "Is the light switch on?",
             "properties": [
                 "isLight()"
             ],
-            "location" : [100, 800]
+            "location" : [80, 10]
         },
         "c" : {
             "question":"Is there coffee?",
             "properties": [
                 "isCoffee()"
             ],
-            "location" : [50, 150]
+            "location" : [15, 5]
         },
         "d" : {
             "question" : "No",
