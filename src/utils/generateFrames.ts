@@ -9,14 +9,13 @@ function contains(array: any[], element: any): boolean {
     return array.some(item => item[0] === element[0] && item[1] === element[1]);
 }
 
-export default function generateFrames(parsedData: any, graph: any, robots: any): string[] {
-    if (!parsedData || !graph || !robots) {
+export default function generateFrames(parsedData: any, robots: any): string[] {
+    if (!parsedData || !robots) {
         return [];
     }
 
     let frames: string[] = [];
     const locations = location_set(parsedData);
-
     // Generate frames based on robot locations
     const dims = { width: parsedData.size[0], height: parsedData.size[1] };
     // resize(frames, dims.height + 2, "");
@@ -83,6 +82,11 @@ export default function generateFrames(parsedData: any, graph: any, robots: any)
         frame += line + "\n";
     }
     frames.push(frame);
-    console.log("Locations:", locations);
+
+    
+
+
+
+
     return frames;
 }

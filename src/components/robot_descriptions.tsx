@@ -12,18 +12,18 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
     useEffect(() => {
         const savedRobots = localStorage.getItem('robots');
         let parsedRobots: Robot[] = [];
-        
+
         if (savedRobots) {
             parsedRobots = JSON.parse(savedRobots);
         }
         else {
             parsedRobots = Array.from({ length: robot_count }, (_, index) => ({
-                id: `robot-${index + 1}`,
+                id: String.fromCharCode(65 + index),
                 location: [0, 0],
                 velocity: 1,
             }));
         }
-        
+
         setRobots(parsedRobots.slice(0, robot_count));
     }, [robot_count]);
 
@@ -35,8 +35,7 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
 
     const handleRobotChange = (index: number, field: keyof Robot, value: any) => {
         const updatedRobots = [...robots];
-        console.log("UpdatedRobots:", updatedRobots);
-        
+
         if (field === 'location') {
             const [axis, val] = value;
             updatedRobots[index][field][axis] = parseFloat(val);
@@ -45,58 +44,58 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
         } else {
             updatedRobots[index][field] = value;
         }
-        
+
         setRobots(updatedRobots);
     };
 
     return (
         <div className="robot-descriptions flex">
             <div className="flex-1">
-            {
-                Array.from({ length: robot_count }, (_, index) => (
-                <div key={index} className="">
-                    <h2 className="text-xl font-bold mb-2">Robot {index + 1}</h2>
-                    
-                    <label className="font-bold">ID: </label>
-                    <input
-                        type="text"
-                        value={`robot-${index + 1}`}
-                        onChange={(e) => handleRobotChange(index, 'id', e.target.value)}
-                        className="p-1 rounded"
-                    />
-                    <br/>
-                        
-                    <div className="flex">
-                        <label className="font-bold w-17">Location: </label>
-                        <div className = "flex gap-2"> 
+                {
+                    Array.from({ length: robot_count }, (_, index) => (
+                        <div key={index} className="">
+                            <h2 className="text-xl font-bold mb-2">Robot {index + 1}</h2>
+
+                            <label className="font-bold">ID: </label>
                             <input
-                                type="number"
-                                step="1"
-                                value={robots[index]?.location[0] || 0}
-                                onChange={(e) => handleRobotChange(index, 'location', [0, e.target.value])}
-                                className="p-1 rounded w-10"
+                                type="text"
+                                value={robots[index]?.id || String.fromCharCode(65 + index) + (index + 1)}
+                                onChange={(e) => handleRobotChange(index, 'id', e.target.value)}
+                                className="p-1 rounded"
                             />
+                            <br />
+
+                            <div className="flex">
+                                <label className="font-bold w-17">Location: </label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="number"
+                                        step="1"
+                                        value={robots[index]?.location[0] || 0}
+                                        onChange={(e) => handleRobotChange(index, 'location', [0, e.target.value])}
+                                        className="p-1 rounded w-10"
+                                    />
+                                    <input
+                                        type="number"
+                                        step="1"
+                                        value={robots[index]?.location[1] || 0}
+                                        onChange={(e) => handleRobotChange(index, 'location', [1, e.target.value])}
+                                        className="p-1 rounded w-10"
+                                    />
+                                </div>
+                            </div>
+
+                            <label className="font-bold">Velocity: </label>
                             <input
                                 type="number"
                                 step="1"
-                                value={robots[index]?.location[1] || 0}
-                                onChange={(e) => handleRobotChange(index, 'location', [1, e.target.value])}
-                                className="p-1 rounded w-10"
+                                value={robots[index]?.velocity || 1}
+                                onChange={(e) => handleRobotChange(index, 'velocity', e.target.value)}
+                                className="p-1 rounded"
                             />
                         </div>
-                    </div>
-                    
-                    <label className="font-bold">Velocity: </label>
-                    <input
-                        type="number"
-                        step="1"
-                        value={robots[index]?.velocity || 1}
-                        onChange={(e) => handleRobotChange(index, 'velocity', e.target.value)}
-                        className="p-1 rounded"
-                    />
-                </div>
-                ))
-            }
+                    ))
+                }
             </div>
             <div className="flex-1 car_gif">
                 <Image

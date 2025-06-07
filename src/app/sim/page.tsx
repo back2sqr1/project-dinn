@@ -25,25 +25,19 @@ export default function Home() {
   Robots - Contains the robot parameters, such as location and velocity
   */
   const [parsedData, setParsedData] = useState<any>(null);
-  const [graph, setGraph] = useState<any>();
   const [robots, setRobots] = useState<any[]>([]);
-  const searchtree = search(parsedData, graph, robots);
-  const frames = generateFrames(parsedData, graph, robots);
+  // const [searchTree, setSearchTree] = useState<any>();
+  const frames = generateFrames(parsedData, robots);
+
   {
     useEffect(() => {
       const savedParsedData = localStorage.getItem('parsedData');
-    
-      
+
+
       if (savedParsedData) {
         const parsedDataObj = JSON.parse(savedParsedData);
         setParsedData(parsedDataObj);
-        const newGraph = createGraphFromBeliefDiagram(parsedDataObj);
-        setGraph(newGraph);
-
       }
-    }, []);
-
-    useEffect(() => {
       const savedRobots = localStorage.getItem('robots');
       if (savedRobots) {
         setRobots(JSON.parse(savedRobots));
@@ -57,7 +51,7 @@ export default function Home() {
 
   return (
     <div className="retro-container relative">
-      <span className = "absolute left-1 bottom-0">
+      <span className="absolute left-1 bottom-0">
         <Link href="/belief-graph">prev</Link>
       </span>
       <section>
@@ -77,7 +71,7 @@ export default function Home() {
         <hr />
 
         <article>
-          <br/>
+          <br />
           <div className="p-2 justify-center text-center ">
             <AsciiAnimation
               frames={frames}
@@ -85,10 +79,41 @@ export default function Home() {
               fontSize="clamp(18px, 3vw, 30px)"
             />
           </div>
+
+            {parsedData && robots.length > 0 && (
+            <>
+              {/* <div className="justify-center w-full text-center"> 
+                <Graphviz
+                dot={toDot(search(parsedData, robots))}
+                options={{
+                  zoom: true,
+                  useMaxWidth: true,
+                }}
+                />
+              </div> */}
+              <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={() => {
+                const dotContent = toDot(search(parsedData, robots));
+                const blob = new Blob([dotContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'search-graph.dot';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              }}
+              >
+              Download DOT File
+              </button>
+            </>
+            )}
         </article>
 
       </section>
-      <span className = "absolute right-1 bottom-0">
+      <span className="absolute right-1 bottom-0">
         <Link href="/references">next</Link>
       </span>
     </div>
