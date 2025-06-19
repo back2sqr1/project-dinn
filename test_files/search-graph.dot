@@ -1,277 +1,400 @@
 digraph {
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)";
-  "A at 5,5 with question e (cost: 6)\nB at 5,5 with question e (cost: 4)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)";
-  "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)";
-  "A at 5,5 with question e (cost: 6)\nB at 15,5 with question e (cost: 13)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)";
-  "A at 5,5 with question e (cost: 6)\nB at 0,0 with question e (cost: 3)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)";
-  "A at 80,10 with question e (cost: 80)\nB at 5,5 with question e (cost: 4)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)";
-  "A at 15,5 with question e (cost: 15)\nB at 5,5 with question e (cost: 4)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)";
-  "A at 0,0 with question e (cost: 1)\nB at 5,5 with question e (cost: 4)";
-  "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 4)";
-  "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 4)";
-  "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 14)";
-  "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 14)";
-  "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 11)";
-  "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 11)";
-  "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 78)";
-  "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 154)";
-  "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 154)";
-  "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 78)";
-  "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 78)";
-  "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 144)";
-  "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 144)";
-  "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 159)";
-  "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 159)";
-  "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 78)";
-  "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 78)";
-  "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 78)";
-  "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 78)";
-  "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 23)";
-  "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 23)";
-  "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 13)";
-  "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 13)";
-  "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 29)";
-  "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 29)";
-  "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 83)";
-  "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 10)";
-  "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 10)";
-  "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 83)";
-  "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 83)";
-  "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 19)";
-  "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 19)";
-  "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 3)";
-  "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 3)";
-  "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 83)";
-  "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 83)";
-  "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 83)";
-  "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question d (cost: 155)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question e (cost: 155)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 80)\nB at 5,5 with question d (cost: 4)";
-  "A at 80,10 with question d (cost: 80)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question e (cost: 80)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 80)\nB at 15,5 with question d (cost: 14)";
-  "A at 80,10 with question e (cost: 80)\nB at 15,5 with question e (cost: 14)";
-  "A at 80,10 with question d (cost: 80)\nB at 0,0 with question d (cost: 11)";
-  "A at 80,10 with question e (cost: 80)\nB at 0,0 with question e (cost: 11)";
-  "A at 15,5 with question d (cost: 145)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question e (cost: 145)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question d (cost: 160)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question e (cost: 160)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question d (cost: 25)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question e (cost: 25)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question d (cost: 15)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question e (cost: 15)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question d (cost: 30)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question e (cost: 30)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question d (cost: 8)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question e (cost: 8)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 82)\nB at 5,5 with question d (cost: 4)";
-  "A at 80,10 with question e (cost: 82)\nB at 5,5 with question e (cost: 4)";
-  "A at 80,10 with question d (cost: 82)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question e (cost: 82)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question d (cost: 82)\nB at 15,5 with question d (cost: 14)";
-  "A at 80,10 with question e (cost: 82)\nB at 15,5 with question e (cost: 14)";
-  "A at 80,10 with question d (cost: 82)\nB at 0,0 with question d (cost: 11)";
-  "A at 80,10 with question e (cost: 82)\nB at 0,0 with question e (cost: 11)";
-  "A at 15,5 with question d (cost: 17)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question e (cost: 17)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question d (cost: 1)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question e (cost: 1)\nB at 80,10 with question e (cost: 79)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question e (cost: 6)\nB at 5,5 with question e (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 78)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question e (cost: 6)\nB at 15,5 with question e (cost: 13)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question e (cost: 6)\nB at 0,0 with question e (cost: 3)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 5,5 with question e (cost: 6)\nB at 0,0 with question e (cost: 3)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 80,10 with question e (cost: 80)\nB at 5,5 with question e (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 15,5 with question e (cost: 15)\nB at 5,5 with question e (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 0,0 with question e (cost: 1)\nB at 5,5 with question e (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)";
-  "A at 1,1 with question a (cost: 0)\nB at 2,2 with question a (cost: 0)" -> "A at 0,0 with question e (cost: 1)\nB at 5,5 with question e (cost: 4)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 4)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 4)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 14)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 14)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 11)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 11)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 11)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 11)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 154)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 154)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 144)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 144)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 159)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 159)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 159)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 159)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 80,10 with question b (cost: 78)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 78)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 23)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 23)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 13)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 13)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 29)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 29)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 29)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 29)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 15,5 with question b (cost: 13)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 79)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 10)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 10)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 19)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 19)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 5,5 with question d (cost: 6)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 5,5 with question e (cost: 6)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 5,5 with question d (cost: 10)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 5,5 with question e (cost: 10)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 15,5 with question d (cost: 19)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 15,5 with question e (cost: 19)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question d (cost: 81)\nB at 0,0 with question d (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 80,10 with question e (cost: 81)\nB at 0,0 with question e (cost: 3)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 15,5 with question d (cost: 16)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 15,5 with question e (cost: 16)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question d (cost: 13)\nB at 80,10 with question d (cost: 83)";
-  "A at 5,5 with question b (cost: 6)\nB at 0,0 with question b (cost: 3)" -> "A at 0,0 with question e (cost: 13)\nB at 80,10 with question e (cost: 83)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question d (cost: 155)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question e (cost: 155)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 5,5 with question d (cost: 4)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 5,5 with question e (cost: 4)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 15,5 with question d (cost: 14)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 15,5 with question e (cost: 14)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 0,0 with question d (cost: 11)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 0,0 with question e (cost: 11)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 0,0 with question d (cost: 11)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 0,0 with question e (cost: 11)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question d (cost: 145)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question e (cost: 145)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 160)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 160)\nB at 80,10 with question e (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 160)\nB at 80,10 with question d (cost: 79)";
-  "A at 80,10 with question b (cost: 80)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 160)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question d (cost: 25)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question e (cost: 25)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 5,5 with question d (cost: 4)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 5,5 with question e (cost: 4)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 15,5 with question d (cost: 14)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 15,5 with question e (cost: 14)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 0,0 with question d (cost: 11)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 0,0 with question e (cost: 11)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 80)\nB at 0,0 with question d (cost: 11)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 80)\nB at 0,0 with question e (cost: 11)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question d (cost: 15)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question e (cost: 15)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 30)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 30)\nB at 80,10 with question e (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 30)\nB at 80,10 with question d (cost: 79)";
-  "A at 15,5 with question b (cost: 15)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 30)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question d (cost: 8)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question e (cost: 8)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 5,5 with question d (cost: 4)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 5,5 with question e (cost: 4)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 15,5 with question d (cost: 14)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 15,5 with question e (cost: 14)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 0,0 with question d (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 0,0 with question e (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 0,0 with question d (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 0,0 with question e (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question d (cost: 17)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question e (cost: 17)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 1)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 1)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 1)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 1)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question d (cost: 8)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 5,5 with question e (cost: 8)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 5,5 with question d (cost: 4)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 5,5 with question e (cost: 4)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 15,5 with question d (cost: 14)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 15,5 with question e (cost: 14)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 0,0 with question d (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 0,0 with question e (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question d (cost: 82)\nB at 0,0 with question d (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 80,10 with question e (cost: 82)\nB at 0,0 with question e (cost: 11)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question d (cost: 17)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 15,5 with question e (cost: 17)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 1)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 1)\nB at 80,10 with question e (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question d (cost: 1)\nB at 80,10 with question d (cost: 79)";
-  "A at 0,0 with question b (cost: 1)\nB at 5,5 with question b (cost: 4)" -> "A at 0,0 with question e (cost: 1)\nB at 80,10 with question e (cost: 79)";
+  layout = "fdp";
+  "A/1,1/0\nB/2,2/0\na" [
+    pos = "0,78!";
+  ];
+  "A/5,5/6\nB/5,5/4\nb" [
+    pos = "1,75!";
+  ];
+  "A/5,5/6\nB/5,5/4\ne" [
+    pos = "2,66!";
+  ];
+  "A/5,5/6\nB/80,10/78\nb" [
+    pos = "3,75!";
+  ];
+  "A/5,5/6\nB/80,10/78\ne" [
+    pos = "4,66!";
+  ];
+  "A/5,5/6\nB/15,5/13\nb" [
+    pos = "5,75!";
+  ];
+  "A/5,5/6\nB/15,5/13\ne" [
+    pos = "6,66!";
+  ];
+  "A/5,5/6\nB/0,0/3\nb" [
+    pos = "7,75!";
+  ];
+  "A/5,5/6\nB/0,0/3\ne" [
+    pos = "8,66!";
+  ];
+  "A/80,10/80\nB/5,5/4\nb" [
+    pos = "11,75!";
+  ];
+  "A/80,10/80\nB/5,5/4\ne" [
+    pos = "12,66!";
+  ];
+  "A/15,5/15\nB/5,5/4\nb" [
+    pos = "13,75!";
+  ];
+  "A/15,5/15\nB/5,5/4\ne" [
+    pos = "14,66!";
+  ];
+  "A/0,0/1\nB/5,5/4\nb" [
+    pos = "15,75!";
+  ];
+  "A/0,0/1\nB/5,5/4\ne" [
+    pos = "16,66!";
+  ];
+  "A/5,5/6\nB/80,10/79\nd" [
+    pos = "19,69!";
+  ];
+  "A/5,5/6\nB/80,10/79\ne" [
+    pos = "20,66!";
+  ];
+  "A/80,10/81\nB/5,5/4\nd" [
+    pos = "21,69!";
+  ];
+  "A/80,10/81\nB/5,5/4\ne" [
+    pos = "22,66!";
+  ];
+  "A/80,10/81\nB/80,10/79\nd" [
+    pos = "23,69!";
+  ];
+  "A/80,10/81\nB/80,10/79\ne" [
+    pos = "24,66!";
+  ];
+  "A/80,10/81\nB/15,5/14\nd" [
+    pos = "25,69!";
+  ];
+  "A/80,10/81\nB/15,5/14\ne" [
+    pos = "26,66!";
+  ];
+  "A/80,10/81\nB/0,0/11\nd" [
+    pos = "27,69!";
+  ];
+  "A/80,10/81\nB/0,0/11\ne" [
+    pos = "28,66!";
+  ];
+  "A/15,5/16\nB/80,10/79\nd" [
+    pos = "31,69!";
+  ];
+  "A/15,5/16\nB/80,10/79\ne" [
+    pos = "32,66!";
+  ];
+  "A/0,0/13\nB/80,10/79\nd" [
+    pos = "33,69!";
+  ];
+  "A/0,0/13\nB/80,10/79\ne" [
+    pos = "34,66!";
+  ];
+  "A/5,5/6\nB/80,10/78\nd" [
+    pos = "37,69!";
+  ];
+  "A/80,10/81\nB/5,5/154\nd" [
+    pos = "39,69!";
+  ];
+  "A/80,10/81\nB/5,5/154\ne" [
+    pos = "40,66!";
+  ];
+  "A/80,10/81\nB/80,10/78\nd" [
+    pos = "41,69!";
+  ];
+  "A/80,10/81\nB/80,10/78\ne" [
+    pos = "42,66!";
+  ];
+  "A/80,10/81\nB/15,5/144\nd" [
+    pos = "43,69!";
+  ];
+  "A/80,10/81\nB/15,5/144\ne" [
+    pos = "44,66!";
+  ];
+  "A/80,10/81\nB/0,0/159\nd" [
+    pos = "45,69!";
+  ];
+  "A/80,10/81\nB/0,0/159\ne" [
+    pos = "46,66!";
+  ];
+  "A/15,5/16\nB/80,10/78\nd" [
+    pos = "49,69!";
+  ];
+  "A/15,5/16\nB/80,10/78\ne" [
+    pos = "50,66!";
+  ];
+  "A/0,0/13\nB/80,10/78\nd" [
+    pos = "51,69!";
+  ];
+  "A/0,0/13\nB/80,10/78\ne" [
+    pos = "52,66!";
+  ];
+  "A/80,10/81\nB/5,5/23\nd" [
+    pos = "57,69!";
+  ];
+  "A/80,10/81\nB/5,5/23\ne" [
+    pos = "58,66!";
+  ];
+  "A/80,10/81\nB/15,5/13\nd" [
+    pos = "61,69!";
+  ];
+  "A/80,10/81\nB/15,5/13\ne" [
+    pos = "62,66!";
+  ];
+  "A/80,10/81\nB/0,0/29\nd" [
+    pos = "63,69!";
+  ];
+  "A/80,10/81\nB/0,0/29\ne" [
+    pos = "64,66!";
+  ];
+  "A/5,5/6\nB/80,10/83\nd" [
+    pos = "73,69!";
+  ];
+  "A/5,5/6\nB/80,10/83\ne" [
+    pos = "74,66!";
+  ];
+  "A/80,10/81\nB/5,5/10\nd" [
+    pos = "75,69!";
+  ];
+  "A/80,10/81\nB/5,5/10\ne" [
+    pos = "76,66!";
+  ];
+  "A/80,10/81\nB/80,10/83\nd" [
+    pos = "77,69!";
+  ];
+  "A/80,10/81\nB/80,10/83\ne" [
+    pos = "78,66!";
+  ];
+  "A/80,10/81\nB/15,5/19\nd" [
+    pos = "79,69!";
+  ];
+  "A/80,10/81\nB/15,5/19\ne" [
+    pos = "80,66!";
+  ];
+  "A/80,10/81\nB/0,0/3\nd" [
+    pos = "81,69!";
+  ];
+  "A/80,10/81\nB/0,0/3\ne" [
+    pos = "82,66!";
+  ];
+  "A/15,5/16\nB/80,10/83\nd" [
+    pos = "85,69!";
+  ];
+  "A/15,5/16\nB/80,10/83\ne" [
+    pos = "86,66!";
+  ];
+  "A/0,0/13\nB/80,10/83\nd" [
+    pos = "87,69!";
+  ];
+  "A/0,0/13\nB/80,10/83\ne" [
+    pos = "88,66!";
+  ];
+  "A/5,5/155\nB/80,10/79\nd" [
+    pos = "91,69!";
+  ];
+  "A/5,5/155\nB/80,10/79\ne" [
+    pos = "92,66!";
+  ];
+  "A/80,10/80\nB/5,5/4\nd" [
+    pos = "93,69!";
+  ];
+  "A/80,10/80\nB/80,10/79\nd" [
+    pos = "95,69!";
+  ];
+  "A/80,10/80\nB/80,10/79\ne" [
+    pos = "96,66!";
+  ];
+  "A/80,10/80\nB/15,5/14\nd" [
+    pos = "97,69!";
+  ];
+  "A/80,10/80\nB/15,5/14\ne" [
+    pos = "98,66!";
+  ];
+  "A/80,10/80\nB/0,0/11\nd" [
+    pos = "99,69!";
+  ];
+  "A/80,10/80\nB/0,0/11\ne" [
+    pos = "100,66!";
+  ];
+  "A/15,5/145\nB/80,10/79\nd" [
+    pos = "103,69!";
+  ];
+  "A/15,5/145\nB/80,10/79\ne" [
+    pos = "104,66!";
+  ];
+  "A/0,0/160\nB/80,10/79\nd" [
+    pos = "105,69!";
+  ];
+  "A/0,0/160\nB/80,10/79\ne" [
+    pos = "106,66!";
+  ];
+  "A/5,5/25\nB/80,10/79\nd" [
+    pos = "109,69!";
+  ];
+  "A/5,5/25\nB/80,10/79\ne" [
+    pos = "110,66!";
+  ];
+  "A/15,5/15\nB/80,10/79\nd" [
+    pos = "121,69!";
+  ];
+  "A/15,5/15\nB/80,10/79\ne" [
+    pos = "122,66!";
+  ];
+  "A/0,0/30\nB/80,10/79\nd" [
+    pos = "123,69!";
+  ];
+  "A/0,0/30\nB/80,10/79\ne" [
+    pos = "124,66!";
+  ];
+  "A/5,5/8\nB/80,10/79\nd" [
+    pos = "127,69!";
+  ];
+  "A/5,5/8\nB/80,10/79\ne" [
+    pos = "128,66!";
+  ];
+  "A/80,10/82\nB/5,5/4\nd" [
+    pos = "129,69!";
+  ];
+  "A/80,10/82\nB/5,5/4\ne" [
+    pos = "130,66!";
+  ];
+  "A/80,10/82\nB/80,10/79\nd" [
+    pos = "131,69!";
+  ];
+  "A/80,10/82\nB/80,10/79\ne" [
+    pos = "132,66!";
+  ];
+  "A/80,10/82\nB/15,5/14\nd" [
+    pos = "133,69!";
+  ];
+  "A/80,10/82\nB/15,5/14\ne" [
+    pos = "134,66!";
+  ];
+  "A/80,10/82\nB/0,0/11\nd" [
+    pos = "135,69!";
+  ];
+  "A/80,10/82\nB/0,0/11\ne" [
+    pos = "136,66!";
+  ];
+  "A/15,5/17\nB/80,10/79\nd" [
+    pos = "139,69!";
+  ];
+  "A/15,5/17\nB/80,10/79\ne" [
+    pos = "140,66!";
+  ];
+  "A/0,0/1\nB/80,10/79\nd" [
+    pos = "141,69!";
+  ];
+  "A/0,0/1\nB/80,10/79\ne" [
+    pos = "142,66!";
+  ];
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/5,5/4\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/5,5/4\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/80,10/78\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/80,10/78\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/15,5/13\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/15,5/13\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/0,0/3\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/5,5/6\nB/0,0/3\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/80,10/80\nB/5,5/4\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/80,10/80\nB/5,5/4\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/15,5/15\nB/5,5/4\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/15,5/15\nB/5,5/4\ne";
+  "A/1,1/0\nB/2,2/0\na" -> "A/0,0/1\nB/5,5/4\nb";
+  "A/1,1/0\nB/2,2/0\na" -> "A/0,0/1\nB/5,5/4\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/5,5/6\nB/80,10/79\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/5,5/6\nB/80,10/79\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/5,5/4\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/5,5/4\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/80,10/79\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/80,10/79\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/15,5/14\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/15,5/14\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/0,0/11\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/80,10/81\nB/0,0/11\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/15,5/16\nB/80,10/79\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/15,5/16\nB/80,10/79\ne";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/0,0/13\nB/80,10/79\nd";
+  "A/5,5/6\nB/5,5/4\nb" -> "A/0,0/13\nB/80,10/79\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/5,5/6\nB/80,10/78\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/5,5/6\nB/80,10/78\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/5,5/154\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/5,5/154\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/80,10/78\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/80,10/78\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/15,5/144\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/15,5/144\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/0,0/159\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/80,10/81\nB/0,0/159\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/15,5/16\nB/80,10/78\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/15,5/16\nB/80,10/78\ne";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/0,0/13\nB/80,10/78\nd";
+  "A/5,5/6\nB/80,10/78\nb" -> "A/0,0/13\nB/80,10/78\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/5,5/6\nB/80,10/79\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/5,5/6\nB/80,10/79\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/5,5/23\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/5,5/23\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/80,10/79\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/80,10/79\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/15,5/13\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/15,5/13\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/0,0/29\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/80,10/81\nB/0,0/29\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/15,5/16\nB/80,10/79\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/15,5/16\nB/80,10/79\ne";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/0,0/13\nB/80,10/79\nd";
+  "A/5,5/6\nB/15,5/13\nb" -> "A/0,0/13\nB/80,10/79\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/5,5/6\nB/80,10/83\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/5,5/6\nB/80,10/83\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/5,5/10\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/5,5/10\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/80,10/83\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/80,10/83\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/15,5/19\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/15,5/19\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/0,0/3\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/80,10/81\nB/0,0/3\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/15,5/16\nB/80,10/83\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/15,5/16\nB/80,10/83\ne";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/0,0/13\nB/80,10/83\nd";
+  "A/5,5/6\nB/0,0/3\nb" -> "A/0,0/13\nB/80,10/83\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/5,5/155\nB/80,10/79\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/5,5/155\nB/80,10/79\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/5,5/4\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/5,5/4\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/80,10/79\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/80,10/79\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/15,5/14\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/15,5/14\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/0,0/11\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/80,10/80\nB/0,0/11\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/15,5/145\nB/80,10/79\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/15,5/145\nB/80,10/79\ne";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/0,0/160\nB/80,10/79\nd";
+  "A/80,10/80\nB/5,5/4\nb" -> "A/0,0/160\nB/80,10/79\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/5,5/25\nB/80,10/79\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/5,5/25\nB/80,10/79\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/5,5/4\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/5,5/4\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/80,10/79\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/80,10/79\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/15,5/14\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/15,5/14\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/0,0/11\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/80,10/80\nB/0,0/11\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/15,5/15\nB/80,10/79\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/15,5/15\nB/80,10/79\ne";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/0,0/30\nB/80,10/79\nd";
+  "A/15,5/15\nB/5,5/4\nb" -> "A/0,0/30\nB/80,10/79\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/5,5/8\nB/80,10/79\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/5,5/8\nB/80,10/79\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/5,5/4\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/5,5/4\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/80,10/79\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/80,10/79\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/15,5/14\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/15,5/14\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/0,0/11\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/80,10/82\nB/0,0/11\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/15,5/17\nB/80,10/79\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/15,5/17\nB/80,10/79\ne";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/0,0/1\nB/80,10/79\nd";
+  "A/0,0/1\nB/5,5/4\nb" -> "A/0,0/1\nB/80,10/79\ne";
 }

@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Digraph, Node, Edge, toDot } from 'ts-graphviz';
+import { toDot } from 'ts-graphviz';
 import { Typewriter } from 'nextjs-simple-typewriter'
 import Link from 'next/link';
 import createGraphFromBeliefDiagram from '@/utils/createGraphFromBeliefDiagram';
@@ -77,16 +77,39 @@ export default function Home() {
               deleteSpeed={50}
               delaySpeed={1000}
             />
-            <br/>
-            
+            <br />
             <input className="file-input" type="file" id="belief-diagram-file-input" accept=".json" onChange={handleFileChange} />
-
+            <br />
+            <br />
             {parsedData && (
-              <div className="output">
-                <h2>Belief Diagram Output</h2>
-                <Graphviz dot={toDot(graph)} />
-
-              </div>
+              <div className="output flex">
+                      <Graphviz dot={toDot(graph)} />
+                      <div className="locations-chart"></div>
+                        <table className="locations-table w-full">
+                        <thead>
+                          <tr>
+                          <th className="px-4 py-2 text-left">Loc</th>
+                          <th className="px-4 py-2 text-left">Pin</th>
+                          <th className="px-4 py-2 text-left">Prop</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(JSON.parse(parsedData).locations).map(([locationId, locationData]: [string, any]) => {
+                          const properties = Object.entries(JSON.parse(parsedData).prop_to_location)
+                            .filter(([, locations]) => Array.isArray(locations) && locations.includes(locationId))
+                            .map(([prop]) => prop);
+                          
+                          return (
+                            <tr key={locationId}>
+                            <td className="px-4 py-2">{locationId}</td>
+                            <td className="px-4 py-2">[{locationData.pin.join(', ')}]</td>
+                            <td className="px-4 py-2">{properties.length > 0 ? properties.join(', ') : 'None'}</td>
+                            </tr>
+                          );
+                          })}
+                        </tbody>
+                        </table>
+                      </div>
             )}   
         </article>
         <span className = "absolute right-1 bottom-0">

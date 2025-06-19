@@ -5,8 +5,13 @@ function resize(arr : any[], size : number, defval: any) {
     while (arr.length > size) { arr.pop(); }
     while (arr.length < size) { arr.push(defval); }
 }
-function contains(array: any[], element: any): boolean {
-    return array.some(item => item[0] === element[0] && item[1] === element[1]);
+function contains(array: Map<string, [number, number]>, element: any): boolean {
+    for (const [key, value] of array) {
+        if (value[0] === element[0] && value[1] === element[1]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export default function generateFrames(parsedData: any, robots: any): string[] {
@@ -33,7 +38,7 @@ export default function generateFrames(parsedData: any, robots: any): string[] {
                 let found = false;
                 let robotMarker = "A"; // Default robot marker
                 for (const robot of robots) {
-                    if (robot.location[0] === x && robot.location[1] === y) {
+                    if (robot.position[0] === x && robot.position[1] === y) {
                         line += robotMarker; // Robot marker
                         found = true;
                         break;
@@ -56,9 +61,9 @@ export default function generateFrames(parsedData: any, robots: any): string[] {
                 line += "#"; // Border
             }
             else if (contains(locations, [x, y])) {
-                for (const location of locations) {
-                    if (location[0] === x && location[1] === y) {
-                        line += location[2]; // Location marker
+                for (const [key, value] of locations) {
+                    if (value[0] === x && value[1] === y) {
+                        line += key; // Location marker
                         break;
                     }
                 }
@@ -67,7 +72,7 @@ export default function generateFrames(parsedData: any, robots: any): string[] {
                 let found = false;
                 let robotMarker = "A"; // Default robot marker
                 for (const robot of robots) {
-                    if (robot.location[0] === x && robot.location[1] === y) {
+                    if (robot.position[0] === x && robot.position[1] === y) {
                         line += robotMarker; // Robot marker
                         found = true;
                         break;

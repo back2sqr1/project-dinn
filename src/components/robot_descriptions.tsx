@@ -19,7 +19,7 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
         else {
             parsedRobots = Array.from({ length: robot_count }, (_, index) => ({
                 id: String.fromCharCode(65 + index),
-                location: [0, 0],
+                position: [0, 0],
                 velocity: 1,
             }));
         }
@@ -36,7 +36,7 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
     const handleRobotChange = (index: number, field: keyof Robot, value: any) => {
         const updatedRobots = [...robots];
 
-        if (field === 'location') {
+        if (field === 'position') {
             const [axis, val] = value;
             updatedRobots[index][field][axis] = parseFloat(val);
         } else if (field === 'velocity') {
@@ -66,20 +66,20 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
                             <br />
 
                             <div className="flex">
-                                <label className="font-bold w-17">Location: </label>
+                                <label className="font-bold w-17">Position: </label>
                                 <div className="flex gap-2">
                                     <input
                                         type="number"
                                         step="1"
-                                        value={robots[index]?.location[0] || 0}
-                                        onChange={(e) => handleRobotChange(index, 'location', [0, e.target.value])}
+                                        value={robots[index]?.position[0] || 0}
+                                        onChange={(e) => handleRobotChange(index, 'position', [0, e.target.value])}
                                         className="p-1 rounded w-10"
                                     />
                                     <input
                                         type="number"
                                         step="1"
-                                        value={robots[index]?.location[1] || 0}
-                                        onChange={(e) => handleRobotChange(index, 'location', [1, e.target.value])}
+                                        value={robots[index]?.position[1] || 0}
+                                        onChange={(e) => handleRobotChange(index, 'position', [1, e.target.value])}
                                         className="p-1 rounded w-10"
                                     />
                                 </div>

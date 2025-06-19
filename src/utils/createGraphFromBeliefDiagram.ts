@@ -5,37 +5,29 @@ export default function createGraphFromBeliefDiagram(parsedData: any): any {
   });
     
 
-    // add nodes in nodes parsedData.nodes;
-    parsedData.nodes && Object.keys(parsedData.nodes).forEach(nodeId => {
-      const nodeData = parsedData.nodes[nodeId];
-      const node = new Node(nodeId, {
-        label: nodeData.question,
-        color: "green",
-        fontcolor: "green"
+    // Add nodes for each proposition
+    parsedData.props.forEach((prop: string) => {
+      const node = new Node(prop, {
+        shape: 'oval',
+        fontcolor: 'green',
+        color: 'green'
       });
       newGraph.addNode(node);
     });
 
-    // add edges from parsedData.edges
-    parsedData.edges && Object.keys(parsedData.edges).forEach(fromNode => {
-      const toNodes = parsedData.edges[fromNode];
-      const fromNodeObj = newGraph.getNode(fromNode);
-      const falseNodeObj = newGraph.getNode(toNodes[0]);
-      if (fromNodeObj && falseNodeObj) {
-        const falseEdge = new Edge([fromNodeObj, falseNodeObj], {
-          style: "dotted",
-          color: "green",
-        });
-        newGraph.addEdge(falseEdge);
-      }
-      const truthNodeObj = newGraph.getNode(toNodes[1]);
-      if (fromNodeObj && truthNodeObj) {
-        const trueEdge = new Edge([fromNodeObj, truthNodeObj], {
-          style: "solid",
-          color: "green",
-        });
-        newGraph.addEdge(trueEdge);
-      }
+    // Add edges between propositions
+    Object.entries(parsedData.edges).forEach(([from, targets]) => {
+      (targets as string[]).forEach((to: string) => {
+        const fromNode = newGraph.getNode(from);
+        const toNode = newGraph.getNode(to);
+        if (fromNode && toNode) {
+          const edge = new Edge([fromNode, toNode], {
+            color: 'green'
+          });
+          newGraph.addEdge(edge);
+        }
+      });
     });
+
     return newGraph;
 }

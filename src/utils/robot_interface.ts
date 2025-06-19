@@ -1,6 +1,6 @@
 export interface Robot {
     id: string;
-    location: [number, number];
+    position: [number, number];
     velocity: number;
 }
 

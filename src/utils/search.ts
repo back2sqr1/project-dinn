@@ -1,5 +1,6 @@
 import { Digraph, Node, Edge, toDot } from 'ts-graphviz';
 import { Queue } from '@/utils/Queue';
+import { create } from 'domain';
 
 
 
@@ -10,26 +11,29 @@ function euclidean_distance(location_a: any, location_b: any): number {
     );
 }
 
-export function location_set(parsedData: any) : Array<[number, number, string]> {
-    const locations: Array<[number, number, string]> = [];
-    parsedData.nodes && Object.keys(parsedData.nodes).forEach(nodeId => {
-        const nodeData = parsedData.nodes[nodeId];
-        if (nodeData.location) {
-            const location = nodeData.location;
-            if (Array.isArray(location) && location.length === 2) {
-                locations.push([location[0], location[1], nodeId]);
-            } else {
-                console.warn(`Invalid location format for node ${nodeId}: ${location}`);
+export function location_set(parsedData: any) : Map<string, [number, number]> {
+    const locations: Map<string, [number, number]> = new Map();
+    for (const [key, value] of Object.entries(parsedData.locations)) {
+        if (value && typeof value === 'object' && 'pin' in value) {
+            const pin = (value as any).pin;
+            if (Array.isArray(pin) && pin.length >= 2) {
+                locations.set(key, [pin[0], pin[1]]);
             }
         }
-    });
+    }
     return locations;
 }
 
-function cost_function(robot_location : any, location : any) {
-    const distance = euclidean_distance(robot_location, location);
-    return distance;
+function properties_set(parsedData: any) : Array<string> {
+    const properties: Array<string> = [];
+    for (const [key, value] of Object.entries(parsedData.props)) {
+        if (value && typeof value === 'string') {
+            properties.push(value);
+        }
+    }
+    return properties;
 }
+
 
 
 function generateCombinations(
@@ -56,136 +60,192 @@ function generateCombinations(
 }
 
 
-
-
-function getName(r_list: any, question: string, cost_array: number[]): string {
-    if (!r_list || r_list.length === 0 || !question || !cost_array || cost_array.length === 0) {
-        return '';
+function _location_to_prop(prop_to_location: any) {
+    const location_to_prop: { [key: string]: string } = {};
+    for (const [prop, locations] of Object.entries(prop_to_location)) {
+        for (const location of locations as string[]) {
+            if (!location_to_prop[location]) {
+                location_to_prop[location] = "";
+            }
+            location_to_prop[location] = prop;
+        }
     }
-    return r_list.map((robot: any, index: number) => {
-        const cost: number = Math.round(cost_array[index]);
-        return `${robot.id} at ${robot.location} with question ${question} (cost: ${cost})`;
-    }).join('\n');
+    return location_to_prop;
+}
+
+class Robot {
+    id: string;
+    velocity: number;
+    position: [number, number];
+    assignedLoc: string | null;
+    cost: number;
+    time: number;
+
+    constructor({
+        id,
+        velocity = 1,
+        position = [0, 0],
+        assignedLoc = null,
+        time = 0
+    }: {
+        id: string;
+        velocity?: number;
+        position?: [number, number];
+        assignedLoc?: string | null;
+        time?: number;
+    }) {
+        this.id = id;
+        this.velocity = velocity;
+        this.position = position;
+        this.assignedLoc = assignedLoc;
+        this.time = time;
+        this.cost = 0;
+    }
+
+    updateTime() {
+        // if all robots are assigned to a location, then update the time accordingly
+
+    }
+}
+
+class RobotManager {
+    robot_map: Map<string, Robot>;
+    available_robots: string[];
+    location_set : Map<string, [number, number]>;
+
+
+    // Persistency on states
+    time_steps: Array<[Map<string, Robot>, string[]]> = [];
+
+    constructor(robots: any[], location_set: Map<string, [number, number]>) {
+        this.robot_map = createRobotMap(robots);
+        this.available_robots = Array.from(this.robot_map.keys());
+        // Create deep copy of robot_map
+        const robotMapCopy = structuredClone(this.robot_map);
+        // deep copy of available_robots
+        const availableRobotsCopy = structuredClone(this.available_robots);
+        // Store the initial state
+        this.time_steps.push([robotMapCopy, availableRobotsCopy]);
+        this.location_set = location_set;
+    }
+
+    update() {
+        // find the robot with the earliest arrival time to destination
+        let minimumArrivalTime = Infinity;
+
+        for (const [robotId, robot] of this.robot_map.entries()) {
+            let arrivalTime = robot.time;
+            const location_pin = this.location_set.get(robot.assignedLoc || "");
+
+            arrivalTime += euclidean_distance(location_pin, robot.position) / robot.velocity;
+
+            if (arrivalTime < minimumArrivalTime) {
+                minimumArrivalTime = arrivalTime;
+            }
+        }
+
+        // update time and position based on earliest arrival time
+
+        for (const [robotId, robot] of this.robot_map.entries()) {
+            const time_diff = minimumArrivalTime - robot.time;
+            robot.time = minimumArrivalTime;
+            // Calculate new position based on movement towards assigned location
+            if (robot.assignedLoc) {
+                const targetLocation = this.location_set.get(robot.assignedLoc);
+                if (targetLocation) {
+                    const distance = euclidean_distance(robot.position, targetLocation);
+                    const maxTravelDistance = robot.velocity * time_diff;
+                    
+                    if (maxTravelDistance >= distance) {
+                        // Robot reaches the target location
+                        robot.position = [targetLocation[0], targetLocation[1]];
+                        this.available_robots.push(robotId);
+                    } else {
+                        // Robot moves towards the target location
+                        const direction = [
+                            targetLocation[0] - robot.position[0],
+                            targetLocation[1] - robot.position[1]
+                        ];
+                        const directionMagnitude = Math.sqrt(direction[0] ** 2 + direction[1] ** 2);
+                        const normalizedDirection = [
+                            direction[0] / directionMagnitude,
+                            direction[1] / directionMagnitude
+                        ];
+                        
+                        robot.position = [
+                            robot.position[0] + normalizedDirection[0] * maxTravelDistance,
+                            robot.position[1] + normalizedDirection[1] * maxTravelDistance
+                        ];
+                    }
+                    // Adding Cost to the robot based on distance
+                    robot.cost += distance;
+                }
+                
+            }
+
+        }
+
+    }
+
+    assignRobotToLocation(robotId: string, location: string) {
+        const robot = this.robot_map.get(robotId);
+        if (robot) {
+            robot.assignedLoc = location;
+            this.available_robots = this.available_robots.filter(id => id !== robotId);
+        } else {
+            this.update();
+        }
+    }
+}
+
+// Robot Map maps robot id to Robot instance
+function createRobotMap(robots: any[]): Map<string, Robot> {
+    const robotMap = new Map<string, Robot>();
+    for (const robot of robots) {
+        if (robot.id && robot.velocity && Array.isArray(robot.position) && robot.position.length) {
+            const robotInstance = new Robot({
+                id: robot.id,
+                velocity: robot.velocity,
+                position: robot.position as [number, number],
+                assignedLoc: robot.assignedLoc || null,
+                time: robot.time || 0
+            });
+            robotMap.set(robot.id, robotInstance);
+        }
+    }
+    return robotMap;
 }
 
 export default function search(parsedData : any, robots: any): any {
     if (!parsedData || !robots) {
         return null;
     }
-    console.log("CALLED");
-
-    const newGraph = new Digraph();
-
     const locations = location_set(parsedData);
+    const props = properties_set(parsedData);
+    const prop_to_location = parsedData.prop_to_location || {};
+    const location_to_prop = _location_to_prop(prop_to_location);
+    const starting_prop = parsedData.starting_prop || "p";
+    const next_query = parsedData.edges;
 
-    const r_list = robots;
 
-    const cost_array = r_list.map((robot: any) => 0);
-    let queue = new Queue<[any[], string, number[]]>();
-    queue.enqueue([r_list, parsedData.starting_question, cost_array]);
-
-    const edges = parsedData.edges || [];
-    
-    const initialNode = new Node(getName(r_list, parsedData.starting_question, cost_array));
-    newGraph.addNode(initialNode);
-
-    while (queue.size() > 0) {
-        // None of the robots should be at the question location
-        const [curRobots, question_code, cost] = queue.dequeue()!;
-        // GRAPHVIZ
-        const node = newGraph.getNode(getName(curRobots, question_code, cost));
-        if (!node) {
-            console.warn(`Node not found for current state: ${getName(curRobots, question_code, cost)}`);
+    // 1. go to the first prop
+    // in order to do so, you must choose a location, 
+    for (const loc of prop_to_location[starting_prop] || []) {
+        // loc is a letter id like "a"
+        if (!locations.has(loc)) {
+            console.error(`Location ${loc} not found in parsed data.`);
             continue;
         }
 
-        for (let i = 0; i < curRobots.length; i++) {
-            const newRobots = curRobots.map((r: any) => ({ ...r }));
-            newRobots[i].location = parsedData.nodes[question_code].location; // move robot to question location
+        const pin = locations.get(loc);
+        // with this pin, you must select a robot to go there
 
-            // calculate cost
-            const costValue = cost_function(curRobots[i].location, newRobots[i].location);
-            const newCosts = [...cost];
-            newCosts[i] += costValue;
-
-            // new question based on edges
-            // should be true or false in the easy case
-
-            if (question_code == 'e' || question_code == 'd') {
-                const newNode = new Node(getName(newRobots, "END", newCosts));
-                newGraph.addNode(newNode);
-                const graphviz_edge = new Edge([node, newNode], {});
-                newGraph.addEdge(graphviz_edge);
-            }
-            else if (!edges[question_code]) {
-                console.warn(`No edges found for question code: ${question_code}`);
-                continue;
-            }
-            else {
-                for(const edge of edges[question_code]) {
-                    console.log(`Creating edge from ${node} to ${edge}`);
-                    const newQuestionCode = edge; // assuming edge is the question code
-                    const newNode = new Node(getName(newRobots, newQuestionCode, newCosts));
-                    newGraph.addNode(newNode);
-                    const graphviz_edge = new Edge([node, newNode], {});
-                    newGraph.addEdge(graphviz_edge);
-                    queue.enqueue([newRobots, newQuestionCode, newCosts]);
-                    
-                }
-                
-            }
+        for (const robot of robots) {
+            
         }
 
-        // for each location
-        // const combinations = generateCombinations(locations, curRobots);
-        // // console.log("Combinations: ", combinations);
-        // for (const newLocs of combinations) {
-        //     // check if valid
-        //     // combinations assign each robot to a location
-        //     let valid = false;
-        //     for (let i = 0; i < newLocs.length; i++) {
-        //         if (newLocs[i][2] == question_code) {
-        //             valid = true;
-        //             break;
-        //         }
-        //     }
-        //     if (!valid) {
-        //         continue; // skip this combination if no robot is at the question location
-        //     }
-        //     let newCosts = [...cost];
-        //     let newRobots = curRobots.map((robot: any) => ({ ...robot }));
-        //     for (let i = 0; i < newLocs.length; i++) {
-        //         newRobots[i].location = [newLocs[i][0], newLocs[i][1]]; // update robot location
-        //     }
-
-
-        //     // calculate cost
-        //     for (let i = 0; i < curRobots.length; i++) {
-        //         const robot = curRobots[i];
-        //         const costValue = cost_function(robot.location, newRobots[i].location);
-        //         newCosts[i] += costValue;
-        //         // console.log("Costs and New Costs: ", cost, newCosts);
-        //     }
-        //     // add the new state to the queue
-        //     // new question based on edges
-        //     // should be true or false in the easy case
-        //     console.log("New Robots: ", newRobots);
-        //     console.log("Question Code: ", question_code);
-        //     // console.log("New Costs: ", newCosts);
-        //     // console.log("Old robots: ", curRobots);
-        //     // console.log("Old Costs: ", cost);
-        //     for (const edge of edges[question_code] || []) {
-        //         // GRAPHVIZ
-        //         const newNode = new Node(getName(newRobots, edge, newCosts));
-        //         const newQuestionCode = edge; // assuming edge is the question code
-        //         newGraph.addNode(newNode);
-        //         const graphviz_edge = new Edge([node, newNode], {});
-        //         newGraph.addEdge(graphviz_edge);
-        //         queue.enqueue([newRobots, newQuestionCode, newCosts]);
-        //     }
-        // }
-        console.log("Queue size: ", queue.size(), queue);
+        
     }
-    // Convert the graph to DOT format
-    return newGraph;
+
+
 }

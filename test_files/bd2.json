@@ -4,43 +4,47 @@
     "title": "Belief Diagram 2 (Lights)",
     "query": "Is the light on?",
     "size" : [80, 10],
-    "starting_question": "a",
-    "nodes" : {
+    "starting_prop": "p",
+
+    "props" : [
+        "p",
+        "p'",
+        "p''",
+        "p'''",
+        "p'''",
+        "true",
+        "false"
+    ],
+    
+
+    "locations" : {
         "a" : {
-            "question": "Is there a person in the room?",
-            "properties": [
-                "isPerson()",
-                "isLight()"
-            ],
-            "location" : [5, 5]
+            "pin" : [5, 5]
         },
         "b" :{
-            "question": "Is the light switch on?",
-            "properties": [
-                "isLight()"
-            ],
-            "location" : [80, 10]
+            "pin" : [60, 7]
         },
         "c" : {
-            "question":"Is there coffee?",
-            "properties": [
-                "isCoffee()"
-            ],
-            "location" : [15, 5]
+            "pin" : [15, 5]
         },
         "d" : {
-            "question" : "No",
-            "terminal": true,
-            "location" : [0, 0]
+            "pin" : [0, 0]
         },
         "e" : {
-            "question" : "Yes",
-            "terminal": true,
-            "location" : [0, 0]
+            "pin" : [10, 10]
         }
     },
     "edges" : {
-        "a" : ["b", "e"],
-        "b" : ["d", "e"]
+        "p" : ["p'", "p'''"],
+        "p'" : ["p'''", "p''"],
+        "p''" : ["true", "false"],
+        "p'''": ["p''", "false"]
+    },
+
+    "prop_to_location" : {
+        "p" : ["a"],
+        "p'" : ["b", "e"],
+        "p''" : ["b", "d", "e"],
+        "p'''": ["d"]
     }
 }
