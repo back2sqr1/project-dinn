@@ -11,7 +11,7 @@ type AsciiAnimationProps = {
 export default function AsciiAnimation({
   frames,
   frameRate = 5,
-  fontSize = 'clamp(12px, 2.5vw, 24px)',
+  fontSize = 'clamp(8px, 2vw, 16px)',
   style = {},
 }: AsciiAnimationProps) {
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -46,7 +46,7 @@ export default function AsciiAnimation({
       // Use the smaller value to ensure it fits both constraints
       const finalFontSize = Math.min(fontSizeByHeight, fontSizeByWidth);
       
-      setCalculatedFontSize(`${Math.max(12, finalFontSize)}px`);
+      setCalculatedFontSize(`${Math.max(8, finalFontSize)}px`);
     };
 
     calculateFontSize();

@@ -17,16 +17,30 @@ export default function createGraphFromBeliefDiagram(parsedData: any): any {
 
     // Add edges between propositions
     Object.entries(parsedData.edges).forEach(([from, targets]) => {
-      (targets as string[]).forEach((to: string) => {
+      
+      const to1 = (targets as string[])[0];
+      if (to1) {
         const fromNode = newGraph.getNode(from);
-        const toNode = newGraph.getNode(to);
+        const toNode = newGraph.getNode(to1);
         if (fromNode && toNode) {
           const edge = new Edge([fromNode, toNode], {
-            color: 'green'
+            color: 'green',
+            style: 'dashed',
           });
           newGraph.addEdge(edge);
         }
-      });
+      }
+      const to2 = (targets as string[])[1];
+      if (to1) {
+        const fromNode = newGraph.getNode(from);
+        const toNode = newGraph.getNode(to2);
+        if (fromNode && toNode) {
+          const edge = new Edge([fromNode, toNode], {
+            color: 'green',
+          });
+          newGraph.addEdge(edge);
+        }
+      }
     });
 
     return newGraph;

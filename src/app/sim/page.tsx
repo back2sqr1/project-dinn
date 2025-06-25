@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import search from '@/utils/search';
 import { TimeStepNode } from '@/utils/search';
- 
+
 
 import { nanoid } from 'nanoid';
 import '@xyflow/react/dist/style.css';
@@ -37,14 +37,14 @@ import generateFrames from '@/utils/generateFrames';
 const initialNodes = [
   {
     id: '1',
-    data: { },
+    data: {},
     type: 'xyTimeStepNode',
     position: { x: 0, y: 0 },
   },
   {
     id: '2',
     type: 'xyTimeStepNode',
-    data: { },
+    data: {},
     position: { x: 100, y: 100 },
   },
 ]
@@ -69,15 +69,15 @@ export default function Home() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    (params : any) => setEdges((eds) => addEdge(params, eds)),
+    (params: any) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
   const nodeTypes = useMemo(() => ({ xyTimeStepNode: XYTimeStepNode }), []);
- 
+
 
   const frames = generateFrames(parsedData, robots);
-  const searchResults = useMemo((): TimeStepNode | null => 
-    search(parsedData, robots), 
+  const searchResults = useMemo((): TimeStepNode | null =>
+    search(parsedData, robots),
     [parsedData, robots]
   );
 
@@ -86,7 +86,8 @@ export default function Home() {
       const newNodes = [{
         id: searchResults.id,
         type: 'xyTimeStepNode',
-        data: { head: searchResults, 
+        data: {
+          head: searchResults,
           edges: {
             position: [0, 0],
             handle_id: nanoid(),
@@ -97,7 +98,7 @@ export default function Home() {
       setNodes(newNodes);
     }
   }, [searchResults]);
-  
+
 
   {
     useEffect(() => {
@@ -118,7 +119,7 @@ export default function Home() {
       }
     }, []);
 
-    
+
   }
 
   return (
@@ -126,50 +127,51 @@ export default function Home() {
       <span className="absolute left-1 bottom-0">
         <Link href="/belief-graph">prev</Link>
       </span>
-      <section>
-        <header>
-          <h1>
-            <Typewriter
-              words={['Search']}
-              loop={1}
-              cursor
-              cursorStyle=''
-              typeSpeed={30}
-              deleteSpeed={50}
-              delaySpeed={1000}
-            />
-          </h1>
-        </header>
-        <hr />
 
-        <article>
-          <br />
-          <div className="p-2 justify-center text-center ">
-            <AsciiAnimation
-              frames={frames}
-              frameRate={2}
-            />
-          </div>
-        </article>
-        
-      </section>
+      <header className="mb-4">
+        <h1>
+          <Typewriter
+            words={['Search']}
+            loop={1}
+            cursor
+            cursorStyle=''
+            typeSpeed={30}
+            deleteSpeed={50}
+            delaySpeed={1000}
+          />
+        </h1>
+        <hr/>
+      </header>
+      
 
-      <div className="tree cen" style= {{ width: '100%', height: '95%'}}>
-        <ReactFlow
-          defaultEdgeOptions={{ animated: true }}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          proOptions={{ hideAttribution: true }}
-          nodeTypes = {nodeTypes}
-        >
-          <Controls />
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        </ReactFlow>
+      <div className="flex gap-2 h-full">
+
+        <div className="justify-center items-center flex flex-col">
+          <AsciiAnimation
+            frames={frames}
+            frameRate={2}
+          />
+        </div>
+        <div className="flex-1">
+          <ReactFlow
+            defaultEdgeOptions={{ animated: true }}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            proOptions={{ hideAttribution: true }}
+            nodeTypes={nodeTypes}
+          >
+            <Controls />
+            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          </ReactFlow>
+        </div>
       </div>
       
+
+
+
       <span className="absolute right-1 bottom-0">
         <Link href="/references">next</Link>
       </span>

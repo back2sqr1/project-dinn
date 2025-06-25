@@ -3,7 +3,7 @@
     "institution": "Texas A&M University",
     "title": "Belief Diagram 2 (Lights)",
     "query": "Is the light on?",
-    "size" : [80, 10],
+    "size" : [50, 10],
     "starting_prop": "p",
 
     "props" : [
@@ -22,7 +22,7 @@
             "pin" : [5, 5]
         },
         "b" :{
-            "pin" : [60, 7]
+            "pin" : [30, 7]
         },
         "c" : {
             "pin" : [15, 5]

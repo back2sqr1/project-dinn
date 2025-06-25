@@ -54,7 +54,7 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
                 {
                     Array.from({ length: robot_count }, (_, index) => (
                         <div key={index} className="">
-                            <h2 className="text-xl font-bold mb-2">Robot {index + 1}</h2>
+                            <h2 className="text-xl font-bold">Robot {index + 1}</h2>
 
                             <label className="font-bold">ID: </label>
                             <input
@@ -73,14 +73,14 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
                                         step="1"
                                         value={robots[index]?.position[0] || 0}
                                         onChange={(e) => handleRobotChange(index, 'position', [0, e.target.value])}
-                                        className="p-1 rounded w-10"
+                                        className="rounded w-10"
                                     />
                                     <input
                                         type="number"
                                         step="1"
                                         value={robots[index]?.position[1] || 0}
                                         onChange={(e) => handleRobotChange(index, 'position', [1, e.target.value])}
-                                        className="p-1 rounded w-10"
+                                        className="rounded w-10"
                                     />
                                 </div>
                             </div>
