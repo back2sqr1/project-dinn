@@ -1,0 +1,6 @@
+.react-flow {
+  --xy-node-background-color-default: #aaaaaa;
+  --xy-edge-stroke-default: #00ee00;
+  --xy-node-border-default: 1px solid #00ee00;
+  --xy-controls-button-background-color-default: #111111;
+}

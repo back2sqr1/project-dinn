@@ -11,6 +11,7 @@
   "dependencies": {
     "@hpcc-js/wasm": "^2.22.4",
     "@ts-graphviz/react": "^0.10.6",
+    "@xyflow/react": "^12.7.1",
     "graphviz-react": "^1.2.5",
     "next": "15.3.3",
     "nextjs-simple-typewriter": "^5.2.2",
