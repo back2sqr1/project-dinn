@@ -59,9 +59,7 @@ export default memo((props: XYTimeStepNodeProps) => {
     const deleteNode = useCallback(() => {
         // Get all edges connected to this node
         const edges = reactFlow.getEdges();
-        const connectedEdges = edges.filter(edge => edge.source === id || edge.target === id);
-        const edgeIds = connectedEdges.map(edge => edge.id);
-        
+        const connectedEdges = edges.filter(edge => edge.source === id || edge.target === id);        
         // Remove edges first, then the node
         reactFlow.deleteElements({ edges: connectedEdges, nodes: [{ id }] });
     }, [reactFlow, id]);
@@ -102,7 +100,7 @@ export default memo((props: XYTimeStepNodeProps) => {
             <div>
                 <h4 style={{ fontSize: '12px' }}>Node Info:</h4>
                 <div style={{ fontSize: '12px', marginBottom: '2px' }}>
-                    {Array.from(robot_map.entries()).map(([key, robot]) => `${key}: ${robot.position}`).join(', ')}
+                    {Array.from(robot_map.entries()).map(([key, robot]) => `${key}: ${robot.position} (${Math.round(robot.cost)})`).join(', ')}
                     {"   (" + query + ")"}
                 </div>
             </div>

@@ -165,6 +165,39 @@ class RobotManager {
             }
         }
 
+        function moveRobotTowardsLocation(robot: Robot, targetLocation: [number, number], time_diff: number) {
+            const distance = euclidean_distance(robot.position, targetLocation);
+            const maxTravelTime = robot.velocity * time_diff;
+            const tolerance = 0.01;
+            if (distance * robot.velocity < maxTravelTime) {
+                // Robot is already at the target location or can reach it
+                // within the tolerance
+                robot.position = [targetLocation[0], targetLocation[1]];
+            } 
+            else if (Math.abs(maxTravelTime - distance) <= tolerance) {
+                // Robot reaches the target location
+                robot.position = [targetLocation[0], targetLocation[1]];
+            } else {
+                // Robot moves towards the target location
+                const direction = [
+                    targetLocation[0] - robot.position[0],
+                    targetLocation[1] - robot.position[1]
+                ];
+                const directionMagnitude = Math.sqrt(direction[0] ** 2 + direction[1] ** 2);
+                const normalizedDirection = [
+                    direction[0] / directionMagnitude,
+                    direction[1] / directionMagnitude
+                ];
+                
+                robot.position = [
+                    robot.position[0] + normalizedDirection[0] * maxTravelTime,
+                    robot.position[1] + normalizedDirection[1] * maxTravelTime
+                ];
+            }
+            // Adding Cost to the robot based on distance
+            robot.cost += distance;
+        }
+
         // update time and position based on earliest arrival time
         
 
@@ -174,41 +207,7 @@ class RobotManager {
             // Calculate new position based on movement towards assigned location
             if (robot.assignedLoc) {
                 const targetLocation = this.location_set.get(robot.assignedLoc);
-                
-                if (targetLocation) { // if targetLocation is defined
-                    const distance = euclidean_distance(robot.position, targetLocation);
-                    const maxTravelTime = robot.velocity * time_diff;
-                    const tolerance = 0.01;
-                    if (distance * robot.velocity < maxTravelTime) {
-                        // Robot is already at the target location or can reach it
-                        // within the tolerance
-                        robot.position = [targetLocation[0], targetLocation[1]];
-                    } 
-                    else if (Math.abs(maxTravelTime - distance) <= tolerance) {
-                        // Robot reaches the target location
-                        robot.position = [targetLocation[0], targetLocation[1]];
-                    } else {
-                        // Robot moves towards the target location
-                        const direction = [
-                            targetLocation[0] - robot.position[0],
-                            targetLocation[1] - robot.position[1]
-                        ];
-                        const directionMagnitude = Math.sqrt(direction[0] ** 2 + direction[1] ** 2);
-                        const normalizedDirection = [
-                            direction[0] / directionMagnitude,
-                            direction[1] / directionMagnitude
-                        ];
-                        
-                        robot.position = [
-                            robot.position[0] + normalizedDirection[0] * maxTravelTime,
-                            robot.position[1] + normalizedDirection[1] * maxTravelTime
-                        ];
-                    }
-                    // Adding Cost to the robot based on distance
-                    robot.cost += distance;
-
-                }
-                
+                moveRobotTowardsLocation(robot, targetLocation || robot.position, time_diff);
             }
 
         }
@@ -236,7 +235,6 @@ class RobotManager {
         - All other robots can go to any location or even stay still
         
     */
-   // TODO: 
     generateCombinations(property: string, robot_map: RobotMap, visitedLocations: Set<string>): Array<Map<string, string>> {
         const locations = Array.from(this.location_set.keys());
         const robotIds = Array.from(robot_map.keys());
@@ -251,10 +249,7 @@ class RobotManager {
         if (propertyLocations.length === 0) {
             return combinations;
         }
-        
 
-
-        
         // Generate all possible assignments
         function generateAssignments(robotIndex: number, currentAssignment: Map<string, string>, usedLocations: Set<string>) {
             if (robotIndex === robotIds.length) {
@@ -330,10 +325,7 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
     const next_query = new Map<string, Array<string>>(Object.entries(parsedData.edges));
 
     const robot_manager = new RobotManager(robots, locations, location_to_prop, next_query, starting_prop);
-
-    // updateRobotPositions resolves the assignments
-
-
+    
     /* Strategy:
         1. Generate all combinations of robot assignments to locations for the starting property.
         2. For each combination, assign robots to locations.
@@ -401,6 +393,6 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
         }
 
     }
-    printTimeSteps(robot_manager); // Print the time steps for debugging
+    // printTimeSteps(robot_manager); // Print the time steps for debugging
     return robot_manager.head_time_step; // Return the head of the time step tree
 }
