@@ -19,31 +19,19 @@ interface XYTimeStepNodeProps {
     };
 }
 
-export default memo((props: XYTimeStepNodeProps) => {
+const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     const { data } = props;
     const reactFlow = useReactFlow();
     const [isSelected, setIsSelected] = useState(false);
 
-    if (!data.head) {
-        return (
-            <div style={{ border: '1px solid', padding: '2px', borderRadius: '4px' }}>
-                <div>Empty node</div>
-                <Handle type="target" position={Position.Left} id="target" />
-            </div>
-        );
-    }
-
-    const { robot_map, next, id, query, type } = data.head;
-    const { onNodeSelect } = data;
-
     const handleNodeClick = useCallback(() => {
         setIsSelected(true);
         setTimeout(() => setIsSelected(false), 300);
-        onNodeSelect?.(robot_map);
-    }, [onNodeSelect, robot_map]);
+        data.onNodeSelect?.(data.head?.robot_map);
+    }, [data.onNodeSelect, data.head?.robot_map]);
 
     const addNode = useCallback((to: TimeStepNode, sourceHandleId: string) => {
-        const currentPosition = reactFlow.getNode(id)?.position || { x: 0, y: 0 };
+        const currentPosition = reactFlow.getNode(data.head?.id)?.position || { x: 0, y: 0 };
         const newNode = {
             id: to.id,
             type: 'xyTimeStepNode',
@@ -57,21 +45,33 @@ export default memo((props: XYTimeStepNodeProps) => {
         
         reactFlow.addNodes(newNode);
         reactFlow.addEdges([{
-            id: `${id}-${to.id}`,
-            source: id,
+            id: `${data.head?.id}-${to.id}`,
+            source: data.head?.id,
             target: to.id,
             sourceHandle: sourceHandleId,
             targetHandle: 'target',
             animated: true,
             type: 'smoothstep',
         }]);
-    }, [reactFlow, id, data.onNodeSelect]);
+    }, [reactFlow, data.head?.id, data.onNodeSelect]);
 
     const deleteNode = useCallback(() => {
         const edges = reactFlow.getEdges();
-        const connectedEdges = edges.filter(edge => edge.source === id || edge.target === id);
-        reactFlow.deleteElements({ edges: connectedEdges, nodes: [{ id }] });
-    }, [reactFlow, id]);
+        const connectedEdges = edges.filter(edge => edge.source === data.head?.id || edge.target === data.head?.id);
+        reactFlow.deleteElements({ edges: connectedEdges, nodes: [{ id: data.head?.id }] });
+    }, [reactFlow, data.head?.id]);
+
+    if (!data.head) {
+        return (
+            <div style={{ border: '1px solid', padding: '2px', borderRadius: '4px' }}>
+                <div>Empty node</div>
+                <Handle type="target" position={Position.Left} id="target" />
+            </div>
+        );
+    }
+
+    const { robot_map, next, id, query, type } = data.head;
+    const { onNodeSelect } = data;
 
     const isLeafNode = !next || next.length === 0;
     
@@ -197,3 +197,7 @@ export default memo((props: XYTimeStepNodeProps) => {
         </div>
     );
 });
+
+XYTimeStepNode.displayName = 'XYTimeStepNode';
+
+export default XYTimeStepNode;

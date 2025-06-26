@@ -142,7 +142,7 @@ export class RobotManager {
             // determine the next question based on the resolution
             let nextQuestion = structuredClone(query);
             while (resolution.has(nextQuestion)) {
-                let truth = resolution.get(nextQuestion) === 'T';
+                const truth = resolution.get(nextQuestion) === 'T';
                 if(truth) {
                     nextQuestion = this.next_question.get(nextQuestion)?.[1] || '';                    
                 } else {
