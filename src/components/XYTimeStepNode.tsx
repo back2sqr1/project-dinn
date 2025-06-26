@@ -73,11 +73,12 @@ export default memo((props: XYTimeStepNodeProps) => {
         reactFlow.deleteElements({ edges: connectedEdges, nodes: [{ id }] });
     }, [reactFlow, id]);
 
+    const isLeafNode = !next || next.length === 0;
+    
     const nodeStyle = {
         border: '1px #00ee00 solid',
         padding: '10px',
         borderRadius: '4px',
-        minWidth: '150px',
         position: 'relative' as const,
         cursor: 'pointer',
         transform: isSelected ? 'scale(1.01)' : 'scale(1)',
@@ -106,15 +107,56 @@ export default memo((props: XYTimeStepNodeProps) => {
             <Handle type="target" position={Position.Left} id="target" />
             
             <div>
-                <h4 style={{ fontSize: '12px' }}>Node Info:</h4>
-                <div style={{ fontSize: '12px', marginBottom: '2px' }}>
-                    {Array.from(robot_map.entries()).map(([key, robot]) => 
-                        `${key}: ${robot.position} (${Math.round(robot.cost)})`
-                    ).join(', ')} ({query})
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                    <h4 style={{ margin: 0 }}>{isLeafNode ? 'Leaf Node' : 'Node Info'}:</h4>
+                    <span style={{ 
+                        color: 'white', 
+                        borderRadius: '3px',
+                        fontSize: '10px'
+                    }}>
+                        {isLeafNode ? 'LEAF' : (type === "Query" ? "Q" : "RA")}
+                    </span>
                 </div>
+                
+                {isLeafNode ? (
+                    <div style={{}}>
+                        <div style={{ fontSize: '11px', fontWeight: 'bold'}}>
+                            Query: {query}
+                        </div>
+                        <div style={{ fontSize: '10px' }}>
+                            <strong>Robots:</strong>
+                        </div>
+                        {Array.from(robot_map.entries()).map(([robotId, robot]) => (
+                            <div key={robotId} style={{ fontSize: '9px'}}>
+                                <strong>{robotId}:</strong>
+                                <div style={{ paddingLeft: '8px' }}>
+                                    Position: [{robot.position.join(', ')}]<br/>
+                                    Cost: {Math.round(robot.cost * 100) / 100}<br/>
+                                    Time: {robot.time ? `${Math.round(robot.time * 100) / 100}` : 'N/A'}<br/>
+                                </div>
+                            </div>
+                        ))}
+                        {type === "Query" && (
+                            <div style={{ fontSize: '9px', marginTop: '6px' }}>
+                                <strong>Resolved Questions:</strong>
+                                {Array.from(data.head.resolvedQuestions.entries()).map(([key, value]) => (
+                                    <div key={key} style={{ paddingLeft: '8px' }}>
+                                        {key}: {value}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div style={{ fontSize: '12px', marginBottom: '2px' }}>
+                        {Array.from(robot_map.entries()).map(([key, robot]) => 
+                            `${key}: ${robot.position} (${Math.round(robot.cost)})`
+                        ).join(', ')} ({query})
+                    </div>
+                )}
             </div>
 
-            {next && next.length > 0 && (
+            {!isLeafNode && next && next.length > 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                     {next.map((node, nodeIndex) => {
                         const handleId = `next-${nodeIndex}`;

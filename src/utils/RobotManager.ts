@@ -58,16 +58,28 @@ export class RobotManager {
 
         const robotMapCopy = structuredClone(initialRobotMap); // Create a deep copy of the initial robot map
 
-        this.head_time_step = new TimeStepNode({
+
+        
+        const startNode = new TimeStepNode({
             id: nanoid(),
             robot_map: robotMapCopy,
             query: initial_question,
             next: [],
             type: 'Robot Assignment',
+            resolvedQuestions: new Map<string, string>()
+        });
+
+        this.head_time_step = new TimeStepNode({
+            id: nanoid(),
+            robot_map: robotMapCopy,
+            query: initial_question,
+            next: [startNode],
+            type: 'Query',
             resolvedQuestions: new Map<string, string>()    
         }); // Set the head of the time step tree to the initial state
+
         this.time_step_queue = new Queue<TimeStepNode>(); // Initialize the time step queue
-        this.time_step_queue.enqueue(this.head_time_step); // Enqueue the initial time step
+        this.time_step_queue.enqueue(startNode); // Enqueue the initial time step
     } 
 
     countTravelingRobots(robot_map: RobotMap): number {
