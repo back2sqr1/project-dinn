@@ -1,10 +1,9 @@
 'use client';
 import { Typewriter } from 'nextjs-simple-typewriter'
 import Link from "next/link";
-import dynamic from 'next/dynamic';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import search from '@/utils/search';
-import { TimeStepNode } from '@/utils/search';
+import { TimeStepNode } from '@/utils/TimeStepNode';
 
 
 import { nanoid } from 'nanoid';
@@ -13,7 +12,6 @@ import '@/styles/override_xy.css';
 import XYTimeStepNode from '@/components/XYTimeStepNode';
 import {
   ReactFlow,
-  MiniMap,
   Controls,
   Background,
   BackgroundVariant,
@@ -22,40 +20,9 @@ import {
   addEdge,
 } from '@xyflow/react';
 
-import createGraphFromBeliefDiagram from '@/utils/createGraphFromBeliefDiagram';
-import { parse } from 'path';
-import { toDot } from 'ts-graphviz';
-
-
-const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
-
 import AsciiAnimation from '@/components/AsciiAnimation';
 import generateFrames from '@/utils/generateFrames';
 
-
-
-const initialNodes = [
-  {
-    id: '1',
-    data: {},
-    type: 'xyTimeStepNode',
-    position: { x: 0, y: 0 },
-  },
-  {
-    id: '2',
-    type: 'xyTimeStepNode',
-    data: {},
-    position: { x: 100, y: 100 },
-  },
-]
-
-const initialEdges = [
-  {
-    id: 'e1-2',
-    source: '1',
-    target: '2',
-  },
-];
 
 export default function Home() {
   /*
@@ -65,17 +32,23 @@ export default function Home() {
   */
   const [parsedData, setParsedData] = useState<any>(null);
   const [robots, setRobots] = useState<any[]>([]);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
+  const [selectedRobotMap, setSelectedRobotMap] = useState<Map<string, any> | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState([{ id: '1', data: {}, type: 'xyTimeStepNode', position: { x: 0, y: 0 } }]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([{ id: 'e1-2', source: '1', target: '2' }]);
+  const [frames, setFrames] = useState<string[]>([]);
   const nodeTypes = useMemo(() => ({ xyTimeStepNode: XYTimeStepNode }), []);
 
+  const handleNodeSelect = useCallback((robotMap: Map<string, any>) => {
+    setSelectedRobotMap(robotMap);
+  }, []);
 
-  const frames = generateFrames(parsedData, robots);
+
+  useEffect(() => {
+    const robotsToUse = selectedRobotMap || robots;
+    const newFrames = generateFrames(parsedData, robotsToUse);
+    setFrames(newFrames);
+  }, [parsedData, robots, selectedRobotMap]);
+
   // search returns a TimeStepNode or null
   const searchResults = useMemo((): TimeStepNode | null =>
     search(parsedData, robots),
@@ -92,13 +65,14 @@ export default function Home() {
           edges: {
             position: [0, 0],
             handle_id: nanoid(),
-          }
+          },
+          onNodeSelect: handleNodeSelect,
         },
         position: { x: 150, y: 100 },
       }];
       setNodes(newNodes);
     }
-  }, [searchResults]);
+  }, [searchResults, handleNodeSelect]);
 
 
   {
@@ -154,19 +128,19 @@ export default function Home() {
           />
         </div>
         <div className="flex-1">
-          <ReactFlow
+            <ReactFlow
             defaultEdgeOptions={{ animated: true }}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
             proOptions={{ hideAttribution: true }}
             nodeTypes={nodeTypes}
-          >
+            >
             <Controls />
             <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-          </ReactFlow>
+            
+            </ReactFlow>
         </div>
       </div>
       

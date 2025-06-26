@@ -1,5 +1,5 @@
-import { RobotMap } from "./search";
-import { Robot } from "./Robot";
+import { RobotMap } from "@/utils/RobotManager";
+import { Robot } from "@/utils/Robot";
 import { nanoid } from "nanoid";
 
 
