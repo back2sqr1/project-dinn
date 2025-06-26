@@ -74,16 +74,15 @@ export default memo((props: XYTimeStepNodeProps) => {
     }, [reactFlow, id]);
 
     const nodeStyle = {
-        border: '1px solid',
+        border: '1px #00ee00 solid',
         padding: '10px',
         borderRadius: '4px',
         minWidth: '150px',
         position: 'relative' as const,
         cursor: 'pointer',
-        transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+        transform: isSelected ? 'scale(1.01)' : 'scale(1)',
         transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-        boxShadow: isSelected ? '0 4px 12px rgba(0, 123, 255, 0.3)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
-        borderColor: isSelected ? '#007bff' : '#ccc'
+        boxShadow: isSelected ? '0 4px 12px rgb(6, 147, 6)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
     };
 
     const deleteButtonStyle = {
