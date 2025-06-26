@@ -1,146 +1,11 @@
 import { Queue } from '@/utils/Queue';
 import { nanoid } from 'nanoid';
+import { euclidean_distance, location_set, _location_to_prop, properties_set } from './props_and_locations';
+import { Robot } from '@/utils/Robot';
+import { TimeStepNode } from '@/utils/TimeStepNode';
 import next from 'next';
 
-type RobotMap = Map<string, Robot>;
-function euclidean_distance(location_a: any, location_b: any): number {
-    return Math.sqrt(
-        Math.pow(location_a[0] - location_b[0], 2) +
-        Math.pow(location_a[1] - location_b[1], 2)
-    );
-}
-
-export function location_set(parsedData: any) : Map<string, [number, number]> {
-    const locations: Map<string, [number, number]> = new Map();
-    for (const [key, value] of Object.entries(parsedData.locations)) {
-        if (value && typeof value === 'object' && 'pin' in value) {
-            const pin = (value as any).pin;
-            if (Array.isArray(pin) && pin.length >= 2) {
-                locations.set(key, [pin[0], pin[1]]);
-            }
-        }
-    }
-    return locations;
-}
-
-function properties_set(parsedData: any) : Array<string> {
-    const properties: Array<string> = [];
-    for (const [key, value] of Object.entries(parsedData.props)) {
-        if (value && typeof value === 'string') {
-            properties.push(value);
-        }
-    }
-    return properties;
-}
-
-function _location_to_prop(prop_to_location: any) {
-    const location_to_prop: { [key: string]: string[] } = {};
-    for (const [prop, locations] of Object.entries(prop_to_location)) {
-        for (const location of locations as string[]) {
-            if (!location_to_prop[location]) {
-                location_to_prop[location] = [];
-            }
-            location_to_prop[location].push(prop);
-        }
-    }
-    return location_to_prop;
-}
-
-export class Robot {
-    id: string;
-    velocity: number;
-    position: [number, number];
-    assignedLoc: string | null;
-    cost: number;
-    time: number;
-
-    constructor({
-        id,
-        velocity = 1,
-        position = [0, 0],
-        assignedLoc = null,
-        time = 0,
-        cost = 0
-    }: {
-        id: string;
-        velocity?: number;
-        position?: [number, number];
-        assignedLoc?: string | null;
-        time?: number;
-        cost?: number;
-    }) {
-        this.id = id;
-        this.velocity = velocity;
-        this.position = position;
-        this.assignedLoc = assignedLoc;
-        this.time = time;
-        this.cost = cost;
-    }
-
-    toString(): string {
-        return `Robot[vel=${this.velocity}, pos=[${Math.round(this.position[0])}, ${Math.round(this.position[1])}], time=${Math.round(this.time)}, cost=${Math.round(this.cost)}]`;
-    }
-
-}
-
-export class TimeStepNode {
-    readonly id: string = nanoid();
-    readonly robot_map: RobotMap;
-    readonly query: string;
-    next: TimeStepNode[] | null = [];
-    visitedLocations: Set<string> = new Set();
-    
-
-
-    constructor({
-        id = nanoid(),
-        robot_map = new Map<string, Robot>(),
-        query = '',
-        next = null,
-        
-    }: {
-        id : string;
-        robot_map: RobotMap; 
-        next: TimeStepNode[] | null; 
-        query: string; 
-    }) {
-        this.id = id;
-        this.robot_map = robot_map;
-        this.next = next;
-        this.query = query;
-    }
-
-    toString(indent: string = "", isLast: boolean = true, layer: number = 0): string {
-        let result = indent;
-        result += isLast ? "└── " : "├── ";
-        result += `Layer ${layer} query: ${this.query} \n`;
-
-
-        const entries = Array.from(this.robot_map.entries());
-        entries.forEach(([robotId, robot], index) => {
-            const last = index === entries.length - 1 && (!this.next || this.next.length === 0);
-            result += indent + (isLast ? "    " : "│   ");
-            result += last ? "└── " : "├── ";
-            robot = (Robot as any).prototype instanceof Robot ? robot : new Robot(robot);
-            // Ensure robot is an instance of Robot
-            result += `${robotId}: ${robot.toString()}\n`;
-        });
-        if (this.visitedLocations.size > 0) {
-            result += indent + (isLast ? "    " : "│   ") + "vis: ";
-            result += Array.from(this.visitedLocations).join(", ") + "\n";
-        }
-        if (this.next) {
-            this.next.forEach((node, index) => {
-                const childIsLast = index === this.next!.length - 1;
-                result += node.toString(indent + (isLast ? "    " : "│   "), childIsLast, layer + 1);
-            });
-        }
-        
-        
-
-        return result;
-    }
-}
+export type RobotMap = Map<string, Robot>;
 
 class RobotManager {
     location_set : Map<string, [number, number]>; // map of locations with their coordinates
@@ -153,6 +18,7 @@ class RobotManager {
     head_time_step: TimeStepNode | null = null; // head of the time step tree
 
     // Queue of time steps to be processed
+    // only contains ra nodes
     time_step_queue: Queue<TimeStepNode> = new Queue<TimeStepNode>();
 
     // time step tree initialization:
@@ -182,6 +48,8 @@ class RobotManager {
             robot_map: robotMapCopy,
             query: initial_question,
             next: [],
+            type: 'Robot Assignment',
+            resolvedQuestions: new Map<string, string>()    
         }); // Set the head of the time step tree to the initial state
         this.time_step_queue = new Queue<TimeStepNode>(); // Initialize the time step queue
         this.time_step_queue.enqueue(this.head_time_step); // Enqueue the initial time step
@@ -198,88 +66,80 @@ class RobotManager {
         return count;
     }
 
-    // get known properties based on previous states locations visited
-    getKnownProperties(t : TimeStepNode): Set<string> {
-        const knownProperties = new Set<string>();
-        
-        return knownProperties;
-    }
-
     // Idea: through some sort of functionality, the user can click and
     // see the movement of the robots
-    updateTimeStep(currentTimeStep: TimeStepNode | undefined, robot_map: RobotMap, visitedLocations_thisStep: Set<string>) {
-        // Create deep copy of robot_map
-        const robotMapCopy = structuredClone(robot_map);
+    // makes edge from Robot Assignment node to Query
+    possibleResolutions(index: number, knownProperties: Array<string>, resolvedQuestions: Map<string, string>) : Array<Map<string, string>> {
+        const resolutions : Array<Map<string, string>> = [];
+        const resolvedEntries = Array.from(resolvedQuestions.entries());
+        if (index < 0 || index >= knownProperties.length) {
+            resolutions.push(new Map(resolvedQuestions)); // If index is out of bounds, return the current resolutions
+            return resolutions; // Return empty if index is out of bounds
+        }
+        const property = knownProperties[index]; // Get the property at the current index
+        if (resolvedQuestions.has(property)) {
+            // If the property is already resolved, return an empty array
+            return this.possibleResolutions(index + 1, knownProperties, resolvedQuestions);
+        }
+
+        // If the property is not resolved, we can create two resolutions
+        const trueResolution = new Map(resolvedQuestions);
+        trueResolution.set(property, 'T');
+        resolutions.push(...this.possibleResolutions(index + 1, knownProperties, trueResolution));
+
+        const falseResolution = new Map(resolvedQuestions);
+        falseResolution.set(property, 'F');
+        resolutions.push(...this.possibleResolutions(index + 1, knownProperties, falseResolution));
+
+        return resolutions;
+    }
+
+    updateTimeStep(currentTimeStep: TimeStepNode, visitedLocations_thisStep: Set<string>) {
+        // Make combinations of resolutions
+        const resolvedQuestions = currentTimeStep.resolvedQuestions;
+        const robot_map = currentTimeStep.robot_map;
         
-        if(currentTimeStep?.next) {
-            if(this.next_question.get(currentTimeStep.query) === undefined) {
-                console.error(`No next question found for query: ${currentTimeStep.query}`);
-                return null;
-            }
-            const nextQuestions = structuredClone(this.next_question.get(currentTimeStep.query));
-            if (!nextQuestions || nextQuestions.length === 0) {
-                console.error(`No next questions found for query: ${currentTimeStep.query}`);
-                return null;
-            }
-            for (const nextQuestion of nextQuestions) 
-            {               
-                const newVisistedLocations = new Set([...currentTimeStep.visitedLocations, ...visitedLocations_thisStep]);
-
-                for (const loc of newVisistedLocations) {
-                    // check if I've been to a location where the property is investigated
-                    // this.location_to_prop -> not null
-                    // nextQuestion -> not null
-                    // this.location_to_prop[loc].includes(nextQuestion) -> if a location has a property (nextQuestion)
-                    if(nextQuestion === "true" || nextQuestion === "false") {
-                        // If the next question is a terminal state, we do not enqueue it
-                        continue;
-                    }
-                    if (this.location_to_prop[loc] && nextQuestion && this.location_to_prop[loc].includes(nextQuestion)) {
-                        // If the next question is already known, skip it
-                        // console.log(`Skipping next question ${nextQuestion} for location ${loc} as it is already known.`);
-                        // adding more questions based on outcome of the nextQuestion
-                        let iteration = 0;
-                        for (const prop of this.next_question.get(nextQuestion) || []) {
-                            // 
-                            if (!nextQuestions.includes(prop)) {
-                                // console.log(`Adding new question ${prop} for next questions.`)
-                                nextQuestions.push(prop);
-                            }
-                            iteration++;
-                        }
-                        continue;
-                    } 
-                    
+        const knownProperties = new Set<string>();
+        for (const location of visitedLocations_thisStep) {
+            if (this.location_to_prop[location]) {
+                for (const prop of this.location_to_prop[location]) {
+                    knownProperties.add(prop);
                 }
-
-                const nextTimeStep = new TimeStepNode({
-                    id: nanoid(),
-                    robot_map: robotMapCopy,
-                    next: [],
-                    // property_values: new Map(currentTimeStep.property_values), // Copy the property values from the current time step
-
-                    query: nextQuestion || '',
-                });
-                // if the two sets (visited) intersect, error
-                for (const loc of visitedLocations_thisStep) {
-                    if (currentTimeStep.visitedLocations.has(loc)) {
-                        console.error(`Location ${loc} has already been visited in the current time step.`);
-                        return null;
-                    }   
-                }
-
-                nextTimeStep.visitedLocations = newVisistedLocations;
-                
-                
-                currentTimeStep.next.push(nextTimeStep);
-                if(nextQuestion != "true" && nextQuestion != "false") {
-                    // If the next question is a terminal state, we do not enqueue it
-                    this.time_step_queue.enqueue(nextTimeStep); 
-                }
-  
             }
         }
-        return null;
+        const query = structuredClone(currentTimeStep.query);
+
+        const possibleResolutions = this.possibleResolutions(0, Array.from(knownProperties), resolvedQuestions);
+
+        for (const resolution of possibleResolutions) {
+            // determine the next question based on the resolution
+            let nextQuestion = structuredClone(query);
+            while (resolution.has(nextQuestion)) {
+                let truth = resolution.get(nextQuestion) === 'T';
+                if(truth) {
+                    nextQuestion = this.next_question.get(nextQuestion)?.[1] || '';                    
+                } else {
+                    nextQuestion = this.next_question.get(nextQuestion)?.[0] || '';
+                }
+            }
+            const nextTimeStep = new TimeStepNode({
+                id: nanoid(),
+                robot_map: structuredClone(robot_map),
+                next: [],
+                type: 'Robot Assignment',
+                query: nextQuestion || '',
+                resolvedQuestions: structuredClone(resolution)
+            });
+            nextTimeStep.visitedLocations = new Set([...currentTimeStep.visitedLocations, ...visitedLocations_thisStep]);
+            currentTimeStep.next = currentTimeStep.next || [];
+            currentTimeStep.next.push(nextTimeStep);
+
+            if( nextQuestion != "true" && nextQuestion != "false") {
+                // Enqueue the next time step for processing
+                this.time_step_queue.enqueue(nextTimeStep);
+            }
+
+        }
     }
  
     // Updates the robot positions incremenetally where
@@ -315,16 +175,16 @@ class RobotManager {
             if (robot.assignedLoc) {
                 const targetLocation = this.location_set.get(robot.assignedLoc);
                 
-                if (targetLocation) {
+                if (targetLocation) { // if targetLocation is defined
                     const distance = euclidean_distance(robot.position, targetLocation);
-                    const maxTravelDistance = robot.velocity * time_diff;
+                    const maxTravelTime = robot.velocity * time_diff;
                     const tolerance = 0.01;
-                    if (distance < maxTravelDistance) {
+                    if (distance * robot.velocity < maxTravelTime) {
                         // Robot is already at the target location or can reach it
                         // within the tolerance
                         robot.position = [targetLocation[0], targetLocation[1]];
                     } 
-                    else if (Math.abs(maxTravelDistance - distance) <= tolerance) {
+                    else if (Math.abs(maxTravelTime - distance) <= tolerance) {
                         // Robot reaches the target location
                         robot.position = [targetLocation[0], targetLocation[1]];
                     } else {
@@ -340,8 +200,8 @@ class RobotManager {
                         ];
                         
                         robot.position = [
-                            robot.position[0] + normalizedDirection[0] * maxTravelDistance,
-                            robot.position[1] + normalizedDirection[1] * maxTravelDistance
+                            robot.position[0] + normalizedDirection[0] * maxTravelTime,
+                            robot.position[1] + normalizedDirection[1] * maxTravelTime
                         ];
                     }
                     // Adding Cost to the robot based on distance
@@ -359,13 +219,6 @@ class RobotManager {
         if (robot) {
             robot.assignedLoc = location;
         }
-        
-        // if all robots are assigned updateRobotPositions
-        // if (this.available_robots.length === 0) {
-        //     while(this.available_robots.length < this.robot_map.size) {
-        //         this.updateRobotPositions();
-        //     }
-        // }
     }
 
     /*
@@ -394,9 +247,7 @@ class RobotManager {
             // This would need to be updated based on how property-location mapping is stored
             return this.location_to_prop[loc] && this.location_to_prop[loc].includes(property);
         });
-        
-        // console.log("Property Locations:", propertyLocations);
-        // console.log("Property:", property);
+
         if (propertyLocations.length === 0) {
             return combinations;
         }
@@ -424,7 +275,6 @@ class RobotManager {
                 if (!usedLocations.has(location)) {
                     const newAssignment = new Map(currentAssignment);
                     const newUsedLocations = new Set(usedLocations);
-                    // console.log("New Used Locations:", newUsedLocations);
                     newAssignment.set(robotId, location);
                     newUsedLocations.add(location);
                     
@@ -526,14 +376,30 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
                     if (targetLocation && euclidean_distance(robot.position, targetLocation) < 0.01) {
                         // Robot has reached its destination, mark it as assigned
                         visitedLocations_thisStep.add(robot.assignedLoc);
-                        robot.assignedLoc = null; // Clear the assignment after reaching
                     }
                 }
             }
+            // Make Query Node
+
+            const query_node = new TimeStepNode({
+                id: nanoid(),
+                robot_map: structuredClone(robotMap),
+                query: currentTimeStep.query,
+                next: [],
+                type: 'Query',
+                resolvedQuestions: structuredClone(currentTimeStep.resolvedQuestions)
+            });
+            query_node.visitedLocations = new Set([...currentTimeStep.visitedLocations]);
+
+            if (currentTimeStep.next === null) {
+                currentTimeStep.next = [];
+            }
+            currentTimeStep.next.push(query_node);
             
-            robot_manager.updateTimeStep(currentTimeStep, robotMap, visitedLocations_thisStep);
+            robot_manager.updateTimeStep(query_node, visitedLocations_thisStep);
             robotMap = structuredClone(robotMap_0); // Reset robot map for the next combination
         }
+
     }
     printTimeSteps(robot_manager); // Print the time steps for debugging
     return robot_manager.head_time_step; // Return the head of the time step tree

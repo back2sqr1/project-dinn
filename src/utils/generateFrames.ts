@@ -1,5 +1,5 @@
 import { parse } from "path";
-import { location_set } from "./search";
+import { location_set } from "@/utils/props_and_locations";
 
 function resize(arr : any[], size : number, defval: any) {
     while (arr.length > size) { arr.pop(); }

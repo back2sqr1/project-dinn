@@ -76,6 +76,7 @@ export default function Home() {
 
 
   const frames = generateFrames(parsedData, robots);
+  // search returns a TimeStepNode or null
   const searchResults = useMemo((): TimeStepNode | null =>
     search(parsedData, robots),
     [parsedData, robots]
