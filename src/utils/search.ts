@@ -5,7 +5,7 @@ import { RobotManager } from '@/utils/RobotManager';
 
 
 export let location_to_pin: Map<string, [number, number]> = new Map(); // map of locations with their coordinates
-export let pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
+export const pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
 export let location_to_prop: { [key: string]: string[] } = {}; // map of locations to properties
 
 function printTimeSteps(robotManager: RobotManager) {
@@ -14,7 +14,7 @@ function printTimeSteps(robotManager: RobotManager) {
         return;
     }
     console.log("Time Steps:");
-    console.log(robotManager.head_time_step.toString());
+    console.log(robotManager.head_time_step.longPrint());
 }
 
 export default function search(parsedData : any, robots: any): TimeStepNode | null {
@@ -53,7 +53,7 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
         const combinations = robot_manager.generateCombinations(currentTimeStep.query, robotMap, currentTimeStep.visitedLocations);
         for (const combination of combinations) {
         // for (let i = 0; i < 3; i++) {
-            const visitedLocations_thisStep = new Set<string>();
+            
             // Assign robots to locations based on the current combination
             for( const [robotId, location] of combination.entries()) {
                 robot_manager.assignRobotToLocation(robotId, location, robotMap);
@@ -62,12 +62,15 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
             /* update locations going to visit */
             // adds cost and time
             const max_iterations = 2;
-            let iteration = 0;
+            // let iteration = 0;
             // Make Robot Moving Node as positions are updated
             
             let curNode = currentTimeStep;
 
-            while (robot_manager.countTravelingRobots(robotMap) > 0 && iteration < max_iterations) {
+            while (robot_manager.countTravelingRobots(robotMap) > 0) {
+                const visitedLocations_thisStep = new Set<string>();
+
+
                 robot_manager.updateRobotPositions(robotMap);
                 const robot_moving_node = new TimeStepNode({
                     id: nanoid(),
@@ -83,37 +86,39 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
                 }
                 curNode.next.push(robot_moving_node);
                 curNode = robot_moving_node; // Update current node to the new moving node
-                iteration++;
-            }
 
-            // Check if robot has reached its destination
-            for (const [robotId, robot] of robotMap.entries()) {
-                if (robot.assignedLoc) {
-                    const targetLocation = location_to_pin.get(robot.assignedLoc);
-                    if (targetLocation && euclidean_distance(robot.position, targetLocation) < 0.01) {
-                        // Robot has reached its destination, mark it as assigned
-                        visitedLocations_thisStep.add(robot.assignedLoc);
+                // Check if robot has reached its destination
+                for (const [robotId, robot] of robotMap.entries()) {
+                    if (robot.assignedLoc) {
+                        const targetLocation = location_to_pin.get(robot.assignedLoc);
+                        if (targetLocation && euclidean_distance(robot.position, targetLocation) < 0.01) {
+                            // Robot has reached its destination, mark it as assigned
+                            visitedLocations_thisStep.add(robot.assignedLoc);
+                        }
                     }
                 }
-            }
-            // Make Query Node
+                // Make Query Node
 
-            const query_node = new TimeStepNode({
-                id: nanoid(),
-                robot_map: structuredClone(robotMap),
-                query: curNode.query,
-                next: [],
-                type: 'Query',
-                resolvedQuestions: structuredClone(curNode.resolvedQuestions)
-            });
-            query_node.visitedLocations = new Set([...curNode.visitedLocations]);
+                const query_node = new TimeStepNode({
+                    id: nanoid(),
+                    robot_map: structuredClone(robotMap),
+                    query: curNode.query,
+                    next: [],
+                    type: 'Query',
+                    resolvedQuestions: structuredClone(curNode.resolvedQuestions)
+                });
+                query_node.visitedLocations = new Set([...curNode.visitedLocations]);
 
-            if (curNode.next === null) {
-                curNode.next = [];
+                if (curNode.next === null) {
+                    curNode.next = [];
+                }
+                curNode.next.push(query_node);
+                curNode = query_node; // Update current node to the new query node
+                
+                robot_manager.updateTimeStep(query_node, visitedLocations_thisStep);
             }
-            curNode.next.push(query_node);
+
             
-            robot_manager.updateTimeStep(query_node, visitedLocations_thisStep);
             robotMap = structuredClone(robotMap_0); // Reset robot map for the next combination
         }
 

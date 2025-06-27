@@ -113,6 +113,13 @@ export class RobotManager {
         return resolutions;
     }
 
+    // Updates the current time step with the new robot positions and resolved questions
+    // and enqueues the next time step for processing
+    
+
+    // return true if the query is updated
+    // return false if the query is not updated
+
     updateTimeStep(currentTimeStep: TimeStepNode, visitedLocations_thisStep: Set<string>) {
         // Make combinations of resolutions
         const resolvedQuestions = currentTimeStep.resolvedQuestions;
@@ -164,9 +171,10 @@ export class RobotManager {
     // Updates the robot positions incremenetally where
     // the robot with the earliest arrival time reaches its destination
     // then all other robots move towards its goal
-    updateRobotPositions(robot_map: RobotMap) {
+    updateRobotPositions(robot_map: RobotMap) : Array<Robot> {
         // find the robot with the earliest arrival time to destination
         let minimumArrivalTime = Infinity;
+        const robots_that_arrived = Array<Robot>();
 
         for (const [robotId, robot] of robot_map.entries()) {
             let arrivalTime = robot.time;
@@ -176,6 +184,7 @@ export class RobotManager {
                 const dist = euclidean_distance(location_pin, robot.position);
 
                 if (dist < 0.01) {
+                    robots_that_arrived.push(robot);
                     continue;
                 } else if (arrivalTime + dist / robot.velocity < minimumArrivalTime) {
                     arrivalTime = robot.time + dist / robot.velocity;
@@ -230,6 +239,7 @@ export class RobotManager {
             }
 
         }
+        return robots_that_arrived;
     }
     // currently we will only assign robots only when a new query is determined
     assignRobotToLocation(robotId: string, location: string, robot_map: RobotMap) {

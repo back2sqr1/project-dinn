@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useState } from 'react';
-import { TimeStepNode } from '@/utils/TimeStepNode';
+import { TimeStepNode, reachedDestination } from '@/utils/TimeStepNode';
 import { Robot } from '@/utils/Robot';
 import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
-import { location_to_pin } from '@/utils/search';
 
 interface XYTimeStepNodeProps {
     data: {
@@ -20,7 +19,6 @@ interface XYTimeStepNodeProps {
     };
 }
 
-const DISTANCE_THRESHOLD = 0.01;
 
 const nodeStyle = {
     border: '1px #00ee00 solid',
@@ -46,18 +44,6 @@ const deleteButtonStyle = {
     justifyContent: 'center'
 };
 
-function reachedDestination(robot: Robot): boolean {
-    if (!robot.assignedLoc) return false;
-    
-    const target = location_to_pin.get(robot.assignedLoc);
-    if (!target) return false;
-    
-    const distance = Math.sqrt(
-        Math.pow(robot.position[0] - target[0], 2) +
-        Math.pow(robot.position[1] - target[1], 2)
-    );
-    return distance < DISTANCE_THRESHOLD;
-}
 
 function getSelectedStyle(isSelected: boolean) {
     return {
@@ -85,7 +71,7 @@ function NodeHeader({ isLeafNode, robotMap, query, type }: {
     const typeAbbreviation = isLeafNode ? 'LEAF' : 
         type === "Query" ? "Q" : 
         type === "Robot Assignment" ? "RA" : 
-        type;
+        type === "Robot Moving" ? "Move" : "";
 
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
@@ -158,34 +144,22 @@ function NonLeafNodeContent({ robotMap }: { robotMap: Map<string, Robot> }) {
     );
 }
 
-function getButtonContent(type: string, node: TimeStepNode, robotMap: Map<string, Robot>) {
-    if (type === "Robot Assignment") {
-        return Array.from(node.robot_map.entries())
-            .map(([key, robot]) => `${key}:${robot.position.map(val => Math.round(val)).join(', ')} (${robot.assignedLoc})`)
-            .join(', ');
-    }
-    
-    if (type === "Query") {
-        return `${Array.from(node.resolvedQuestions.entries()).map(([key, value]) => `${key}:${value}`).join(', ')} (${node.query})`;
-    }
-    
-    return Array.from(robotMap.entries())
-        .map(([key, robot]) => {
-            const hasReachedDestination = reachedDestination(robot);
-            return `${key}->${hasReachedDestination ? robot.assignedLoc : 'x'}`;
-        })
-        .join(', ');
+function getButtonContent(node: TimeStepNode, parentType: string): string {
+    return node.toString(parentType);
 }
 
-function NextNodeButton({ node, nodeIndex, type, robotMap, onAddNode }: {
+function NextNodeButton({ node, nodeIndex, onAddNode, parentType }: {
     node: TimeStepNode;
     nodeIndex: number;
-    type: string;
-    robotMap: Map<string, Robot>;
+    label?: string;
     onAddNode: (node: TimeStepNode, handleId: string) => void;
+    parentType?: string;
 }) {
     const handleId = `next-${nodeIndex}`;
-    const buttonContent = getButtonContent(type, node, robotMap);
+    let buttonContent = "";
+    if (parentType) {
+        buttonContent = getButtonContent(node, parentType);
+    }
 
     return (
         <div key={nodeIndex} style={{ position: 'relative', marginBottom: '2px' }}>
@@ -224,6 +198,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     }, [data.onNodeSelect, data.head?.robot_map]);
 
     const addNode = useCallback((to: TimeStepNode, sourceHandleId: string) => {
+        console.log(to.type, "TYPE");
         const currentPosition = reactFlow.getNode(data.head?.id)?.position || { x: 0, y: 0 };
         const newNode = {
             id: to.id,
@@ -298,9 +273,9 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                             key={nodeIndex}
                             node={node}
                             nodeIndex={nodeIndex}
-                            type={type}
-                            robotMap={robot_map}
+                            label={node.label || ""}
                             onAddNode={addNode}
+                            parentType={data.head.type}
                         />
                     ))}
                 </div>

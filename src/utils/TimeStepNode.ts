@@ -1,6 +1,23 @@
 import { RobotMap } from "@/utils/RobotManager";
 import { Robot } from "@/utils/Robot";
 import { nanoid } from "nanoid";
+import { location_to_pin } from "@/utils/search";
+
+
+
+const DISTANCE_THRESHOLD = 0.01;
+export function reachedDestination(robot: Robot): boolean {
+    if (!robot.assignedLoc) return false;
+
+    const target = location_to_pin.get(robot.assignedLoc);
+    if (!target) return false;
+    
+    const distance = Math.sqrt(
+        Math.pow(robot.position[0] - target[0], 2) +
+        Math.pow(robot.position[1] - target[1], 2)
+    );
+    return distance < DISTANCE_THRESHOLD;
+}
 
 
 export class TimeStepNode {
@@ -9,6 +26,7 @@ export class TimeStepNode {
     readonly query: string;
     readonly type: 'Query' | 'Robot Assignment' | 'Robot Moving';
     readonly resolvedQuestions: Map<string, string>;
+    readonly label: string = 'TimeStepNode';
     next: TimeStepNode[] | null = [];
     visitedLocations: Set<string> = new Set();
 
@@ -18,6 +36,7 @@ export class TimeStepNode {
         query = '',
         next = null,
         type = 'Robot Assignment',
+        label = 'TimeStepNode',
         resolvedQuestions,
     }: {
         id : string;
@@ -25,6 +44,7 @@ export class TimeStepNode {
         query: string;
         next: TimeStepNode[] | null;
         type: 'Query' | 'Robot Assignment' | 'Robot Moving';
+        label?: string;
         resolvedQuestions: Map<string, string>;
     }) {
         this.id = id;
@@ -32,10 +52,11 @@ export class TimeStepNode {
         this.query = query;
         this.next = next;
         this.type = type;
+        this.label = label;
         this.resolvedQuestions = resolvedQuestions;
     }
 
-    toString(indent: string = "", isLast: boolean = true, layer: number = 0): string {
+    longPrint(indent: string = "", isLast: boolean = true, layer: number = 0): string {
         let result = indent;
         result += isLast ? "└── " : "├── ";
         result += `Layer ${layer} query: ${this.query} \n`;
@@ -57,12 +78,43 @@ export class TimeStepNode {
         if (this.next) {
             this.next.forEach((node, index) => {
                 const childIsLast = index === this.next!.length - 1;
-                result += node.toString(indent + (isLast ? "    " : "│   "), childIsLast, layer + 1);
+                result += node.longPrint(indent + (isLast ? "    " : "│   "), childIsLast, layer + 1);
             });
         }
         
         
 
         return result;
+    }
+    robotMovingToString(): string {
+        return Array.from(this.robot_map.entries())
+            .map(([key, robot]) => {
+                const hasReachedDestination = reachedDestination(robot);
+                return `${key}->${hasReachedDestination ? robot.assignedLoc : 'x'}`;
+            }).join(', ');
+    }
+
+    toString(parentType: string): string {
+        const typeCode = this.type === "Query" ? "Q" : this.type === "Robot Assignment" ? "RA" : "RM";
+
+
+        if(parentType === "Query") {
+            if (this.type === "Robot Moving") {
+                return this.robotMovingToString() + ` wait (${typeCode})`;
+            }
+            return `[${Array.from(this.resolvedQuestions.entries()).map(([key, value]) => `${key}:${value}`).join(', ')}] (${typeCode})`;
+        }
+
+        if (parentType === "Robot Assignment") {
+            return Array.from(this.robot_map.entries())
+                .map(([key, robot]) => `${key}:${robot.position.map(val => Math.round(val)).join(', ')} (${robot.assignedLoc})`)
+                .join(', ') + ` (${typeCode})`;
+        }
+
+        if (parentType === "Robot Moving") {
+            return this.robotMovingToString() + ` (${typeCode})`;
+        }
+
+        return `${this.query} (${typeCode}) DEFAULT`;
     }
 }
