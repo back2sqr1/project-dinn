@@ -15,7 +15,6 @@ function createRobotMap(robots: any[]): RobotMap {
                 velocity: robot.velocity,
                 position: robot.position as [number, number],
                 assignedLoc: robot.assignedLoc || null,
-                time: robot.time || 0
             });
             robotMap.set(robot.id, robotInstance);
         }
@@ -195,15 +194,11 @@ export class RobotManager {
 
         function moveRobotTowardsLocation(robot: Robot, targetLocation: [number, number], time_diff: number) {
             const distance = euclidean_distance(robot.position, targetLocation);
-            const maxTravelTime = robot.velocity * time_diff;
+            const distanceTraveled = robot.velocity * time_diff;
             const tolerance = 0.01;
-            if (distance * robot.velocity < maxTravelTime) {
+            if (distance < distanceTraveled || Math.abs(distance - distanceTraveled) < tolerance) {
                 // Robot is already at the target location or can reach it
                 // within the tolerance
-                robot.position = [targetLocation[0], targetLocation[1]];
-            } 
-            else if (Math.abs(maxTravelTime - distance) <= tolerance) {
-                // Robot reaches the target location
                 robot.position = [targetLocation[0], targetLocation[1]];
             } else {
                 // Robot moves towards the target location
@@ -218,12 +213,12 @@ export class RobotManager {
                 ];
                 
                 robot.position = [
-                    robot.position[0] + normalizedDirection[0] * maxTravelTime,
-                    robot.position[1] + normalizedDirection[1] * maxTravelTime
+                    robot.position[0] + normalizedDirection[0] * time_diff * robot.velocity,
+                    robot.position[1] + normalizedDirection[1] * time_diff * robot.velocity,
                 ];
             }
             // Adding Cost to the robot based on distance
-            robot.cost += distance;
+            robot.cost += distanceTraveled;
         }
 
         // update time and position based on earliest arrival time

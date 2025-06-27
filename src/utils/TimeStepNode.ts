@@ -29,6 +29,7 @@ export class TimeStepNode {
     readonly label: string = 'TimeStepNode';
     next: TimeStepNode[] | null = [];
     visitedLocations: Set<string> = new Set();
+    time : number = 0;
 
     constructor({
         id = nanoid(),
@@ -54,6 +55,7 @@ export class TimeStepNode {
         this.type = type;
         this.label = label;
         this.resolvedQuestions = resolvedQuestions;
+        this.time = 0;
     }
 
     longPrint(indent: string = "", isLast: boolean = true, layer: number = 0): string {
