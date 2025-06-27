@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import RobotDescriptions from '@/components/robot_descriptions';
 
 export default function Home() {
-  const [robotCount, setRobotCount] = useState<number>(0);
+  const [robotCount, setRobotCount] = useState<number>(2);
 
   // Load robot count from localStorage
   useEffect(() => {

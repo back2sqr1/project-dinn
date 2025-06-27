@@ -7,7 +7,7 @@ import '@/styles/car_design.css';
 import { Robot, RobotDescriptionsProps } from '@/utils/robot_interface';
 
 const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) => {
-    const [robots, setRobots] = useState<Robot[]>([]);
+    const [robots, setRobots] = useState<Robot[]>([{"id":"A","position":[1,1],"velocity":1},{"id":"B","position":[2,2],"velocity":1}]);
 
     useEffect(() => {
         const savedRobots = localStorage.getItem('robots');
@@ -19,7 +19,7 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
         else {
             parsedRobots = Array.from({ length: robot_count }, (_, index) => ({
                 id: String.fromCharCode(65 + index),
-                position: [0, 0],
+                position: [1, 1],
                 velocity: 1,
             }));
         }

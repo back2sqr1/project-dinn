@@ -6,12 +6,59 @@ import { toDot } from 'ts-graphviz';
 import { Typewriter } from 'nextjs-simple-typewriter';
 import Link from 'next/link';
 import createGraphFromBeliefDiagram from '@/utils/createGraphFromBeliefDiagram';
+import { create } from 'domain';
 
 const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
 
+const initialParsed = {
+  "author": "David Zhang",
+  "institution": "Texas A&M University",
+  "title": "Belief Diagram 2 (Lights)",
+  "query": "Is the light on?",
+  "size": [50, 10],
+  "starting_prop": "p",
+  "props": [
+    "p",
+    "p'",
+    "p''",
+    "p'''",
+    "p'''",
+    "true",
+    "false"
+  ],
+  "locations": {
+    "a": {
+      "pin": [5, 5]
+    },
+    "b": {
+      "pin": [30, 7]
+    },
+    "c": {
+      "pin": [15, 5]
+    },
+    "d": {
+      "pin": [0, 0]
+    },
+    "e": {
+      "pin": [10, 10]
+    }
+  },
+  "edges": {
+    "p": ["p'", "p'''"],
+    "p'": ["p'''", "p''"],
+    "p''": ["true", "false"],
+    "p'''": ["p''", "false"]
+  },
+  "prop_to_location": {
+    "p": ["a"],
+    "p'": ["b", "e"],
+    "p''": ["b", "d", "e"],
+    "p'''": ["d"]
+  }
+};
 export default function Home() {
   const [graph, setGraph] = useState<any>();
-  const [parsedData, setParsedData] = useState<any>(null);
+  const [parsedData, setParsedData] = useState<any>();
 
   // Load saved data on mount
   useEffect(() => {
@@ -21,6 +68,9 @@ export default function Home() {
       setParsedData(JSON.stringify(parsedDataObj, null, 2));
       const newGraph = createGraphFromBeliefDiagram(parsedDataObj);
       setGraph(newGraph);
+    } else {
+      setParsedData(JSON.stringify(initialParsed, null, 2));
+      setGraph(createGraphFromBeliefDiagram(initialParsed));
     }
   }, []);
 
