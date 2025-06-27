@@ -67,7 +67,8 @@ function NodeHeader({ isLeafNode, robotMap, query, type }: {
     query: string;
     type: string;
 }) {
-    const timeDisplay = isLeafNode ? 'Leaf Node' : `Time: ${Math.round(robotMap.get('A')?.time || 0)}`;
+    const maxTime = Math.max(...Array.from(robotMap.values()).map(robot => robot.time || 0));
+    const timeDisplay = isLeafNode ? 'Leaf Node' : `Time: ${Math.round(maxTime || 0)}`;
     const typeAbbreviation = isLeafNode ? 'LEAF' : 
         type === "Query" ? "Q" : 
         type === "Robot Assignment" ? "RA" : 
