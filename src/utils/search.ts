@@ -1,8 +1,12 @@
 import { nanoid } from 'nanoid';
-import { euclidean_distance, location_set, _location_to_prop, properties_set } from './props_and_locations';
+import { euclidean_distance, _location_to_pin, _location_to_prop, properties_set } from './props_and_locations';
 import { TimeStepNode } from '@/utils/TimeStepNode';
 import { RobotManager } from '@/utils/RobotManager';
 
+
+export let location_to_pin: Map<string, [number, number]> = new Map(); // map of locations with their coordinates
+export let pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
+export let location_to_prop: { [key: string]: string[] } = {}; // map of locations to properties
 
 function printTimeSteps(robotManager: RobotManager) {
     if (!robotManager.head_time_step) {
@@ -17,16 +21,20 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
     if (!parsedData || !robots) {
         return null;
     }
-    const locations = location_set(parsedData);
-    const props = properties_set(parsedData);
+    location_to_pin = _location_to_pin(parsedData);
     const prop_to_location = parsedData.prop_to_location || {};
-    const location_to_prop = _location_to_prop(prop_to_location);
+    location_to_prop = _location_to_prop(prop_to_location);
     const starting_prop = parsedData.starting_prop || "p";
+
+    for (const [location, pin] of location_to_pin.entries()) {
+        location_to_pin.set(location, pin);
+        pin_to_location.set(pin, location);
+    }
 
     // cast next_query to Map<string, Array<string>>
     const next_query = new Map<string, Array<string>>(Object.entries(parsedData.edges));
 
-    const robot_manager = new RobotManager(robots, locations, location_to_prop, next_query, starting_prop);
+    const robot_manager = new RobotManager(robots, next_query, starting_prop);
     
     /* Strategy:
         1. Generate all combinations of robot assignments to locations for the starting property.
@@ -81,7 +89,7 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
             // Check if robot has reached its destination
             for (const [robotId, robot] of robotMap.entries()) {
                 if (robot.assignedLoc) {
-                    const targetLocation = robot_manager.location_set.get(robot.assignedLoc);
+                    const targetLocation = location_to_pin.get(robot.assignedLoc);
                     if (targetLocation && euclidean_distance(robot.position, targetLocation) < 0.01) {
                         // Robot has reached its destination, mark it as assigned
                         visitedLocations_thisStep.add(robot.assignedLoc);

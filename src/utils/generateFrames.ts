@@ -1,4 +1,4 @@
-import { location_set } from "@/utils/props_and_locations";
+import { _location_to_pin } from "@/utils/props_and_locations";
 
 const contains = (locations: Map<string, [number, number]>, [x, y]: [number, number]): boolean => {
     return Array.from(locations.values()).some(([lx, ly]) => lx === x && ly === y);
@@ -31,7 +31,11 @@ const generateFrame = (
             // Location markers
             let robotFound = false;
             let robotMarker = "A";
-            for (const robot of robots) {
+            const roundedRobot = robots.map(robot => ({
+                ...robot,
+                position: [Math.round(robot.position[0]), Math.round(robot.position[1])]
+            }));
+            for (const robot of roundedRobot) {
                 if (robot.position[0] === x && robot.position[1] === y) {
                     robotFound = true;
                     break;
@@ -59,7 +63,7 @@ const generateFrame = (
 export default function generateFrames(parsedData: any, robotsOrRobotMap: any): string[] {
     if (!parsedData || !robotsOrRobotMap) return [];
 
-    const locations = location_set(parsedData);
+    const locations = _location_to_pin(parsedData);
     const dims = { width: parsedData.size[0], height: parsedData.size[1] };
     
     // Convert robotMap to robots array if needed

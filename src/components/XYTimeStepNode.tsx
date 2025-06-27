@@ -4,6 +4,8 @@ import { Robot } from '@/utils/Robot';
 import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
 
+import { location_to_pin } from '@/utils/search';
+
 interface XYTimeStepNodeProps {
     data: {
         head: {
@@ -11,11 +13,23 @@ interface XYTimeStepNodeProps {
             query: string;
             next: TimeStepNode[];
             id: string;
-            type: "Robot Assignment" | "Query";
+            type: "Robot Assignment" | "Query" | "Robot Moving";
             resolvedQuestions: Map<string, string>;
         }
         edges: { handle_id: string; }
+        onNodeSelect?: (robotMap: Map<string, Robot>) => void;
     };
+}
+
+function reachedDestination(robot: Robot): boolean {
+    if (!robot.assignedLoc) return false;
+    const target = location_to_pin.get(robot.assignedLoc);
+    if (!target) return false;
+    const distance = Math.sqrt(
+        Math.pow(robot.position[0] - target[0], 2) +
+        Math.pow(robot.position[1] - target[1], 2)
+    );
+    return distance < 0.01; // Assuming a threshold of 0.01 for reaching the destination
 }
 
 const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
@@ -26,7 +40,8 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     const handleNodeClick = useCallback(() => {
         setIsSelected(true);
         setTimeout(() => setIsSelected(false), 300);
-    }, [data.head?.robot_map]);
+        data.onNodeSelect?.(data.head?.robot_map || new Map<string, Robot>());
+    }, [data.onNodeSelect, data.head?.robot_map]);
 
     const addNode = useCallback((to: TimeStepNode, sourceHandleId: string) => {
         const currentPosition = reactFlow.getNode(data.head?.id)?.position || { x: 0, y: 0 };
@@ -36,6 +51,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             data: { 
                 head: to, 
                 edges: { handle_id: nanoid() },
+                onNodeSelect: data.onNodeSelect
             },
             position: { x: currentPosition.x + 200, y: currentPosition.y }
         };
@@ -50,7 +66,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             animated: true,
             type: 'smoothstep',
         }]);
-    }, [reactFlow, data.head?.id]);
+    }, [reactFlow, data.head?.id, data.onNodeSelect]);
 
     const deleteNode = useCallback(() => {
         const edges = reactFlow.getEdges();
@@ -104,13 +120,14 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             
             <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-                    <h4 style={{ margin: 0 }}>{isLeafNode ? 'Leaf Node' : 'Node Info'}:</h4>
+                    <h4 style={{ margin: 0 }}>{isLeafNode ? 'Leaf Node' : `Time: ${Math.round(robot_map.get('A')?.time || 0)}`} </h4>
+                    <p>({query})</p>
                     <span style={{ 
                         color: 'white', 
                         borderRadius: '3px',
                         fontSize: '10px'
                     }}>
-                        {isLeafNode ? 'LEAF' : (type === "Query" ? "Q" : "RA")}
+                        {isLeafNode ? 'LEAF' : (type === "Query" ? "Q" : type === "Robot Assignment" ? "RA" : type)}
                     </span>
                 </div>
                 
@@ -147,7 +164,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                     <div style={{ fontSize: '12px', marginBottom: '2px' }}>
                         {Array.from(robot_map.entries()).map(([key, robot]) => 
                             `${key}: ${robot.position.map(val => Math.round(val)).join(', ')} (${Math.round(robot.cost)})`
-                        ).join(', ')} ({query})
+                        ).join(', ')}
                     </div>
                 )}
             </div>
@@ -171,7 +188,12 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                                         <div>{Array.from(node.resolvedQuestions.entries()).map(([key, value]) => 
                                             `${key}:${value}`
                                         ).join(', ')} ({node.query})</div>
-                                    ) : <div>next</div>}
+                                    ) : <div>
+                                            {Array.from(robot_map.entries()).map(([key, robot]) => {
+                                                const hasReachedDestination = reachedDestination(robot);
+                                                return `${key}->${hasReachedDestination ? `${robot.assignedLoc}` : 'x'}`;
+                                            }).join(', ')}
+                                        </div>}
                                 </button>
                                 
                                 <Handle 

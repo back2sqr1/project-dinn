@@ -5,7 +5,7 @@ export function euclidean_distance(location_a: any, location_b: any): number {
     );
 }
 
-export function location_set(parsedData: any) : Map<string, [number, number]> {
+export function _location_to_pin(parsedData: any) : Map<string, [number, number]> {
     const locations: Map<string, [number, number]> = new Map();
     for (const [key, value] of Object.entries(parsedData.locations)) {
         if (value && typeof value === 'object' && 'pin' in value) {

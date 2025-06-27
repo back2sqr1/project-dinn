@@ -1,8 +1,9 @@
 import { Queue } from '@/utils/Queue';
 import { nanoid } from 'nanoid';
-import { euclidean_distance, location_set, _location_to_prop, properties_set } from './props_and_locations';
+import { euclidean_distance, _location_to_pin, _location_to_prop } from './props_and_locations';
 import { Robot } from '@/utils/Robot';
 import { TimeStepNode } from '@/utils/TimeStepNode';
+import { location_to_pin, location_to_prop, pin_to_location } from './search';
 
 export type RobotMap = Map<string, Robot>;
 function createRobotMap(robots: any[]): RobotMap {
@@ -22,10 +23,8 @@ function createRobotMap(robots: any[]): RobotMap {
     return robotMap;
 }
 
+
 export class RobotManager {
-    location_set : Map<string, [number, number]>; // map of locations with their coordinates
-    pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
-    location_to_prop: { [key: string]: string[] }; // map of locations to properties
 
     next_question: Map<string, Array<string>>;
     initial_question: string;
@@ -43,16 +42,9 @@ export class RobotManager {
         own robot_map
         * Edges are added as the tree is being made
     */
-    constructor(robots: any[], location_set: Map<string, [number, number]>, location_to_prop: { [key: string]: string[] } = {}, next_question: Map<string, Array<string>>, initial_question: string) {
+    constructor(robots: any[], next_question: Map<string, Array<string>>, initial_question: string) {
         const initialRobotMap = createRobotMap(robots);
-        this.location_set = location_set;
 
-        // Create a map from pin coordinates to location names
-        for (const [location, pin] of location_set.entries()) {
-            this.pin_to_location.set(pin, location);
-        }
-
-        this.location_to_prop = location_to_prop;
         this.next_question = next_question || null; // Set the next question if provided, otherwise null
         this.initial_question = initial_question;
 
@@ -85,7 +77,7 @@ export class RobotManager {
     countTravelingRobots(robot_map: RobotMap): number {
         let count = 0;
         for (const robot of robot_map.values()) {
-            const targetLocation = this.location_set.get(robot.assignedLoc || '');
+            const targetLocation = location_to_pin.get(robot.assignedLoc || '');
             if (targetLocation && euclidean_distance(robot.position, targetLocation) > 0.01) {
                 count++;
             }
@@ -128,8 +120,8 @@ export class RobotManager {
         
         const knownProperties = new Set<string>();
         for (const location of visitedLocations_thisStep) {
-            if (this.location_to_prop[location]) {
-                for (const prop of this.location_to_prop[location]) {
+            if (location_to_prop[location]) {
+                for (const prop of location_to_prop[location]) {
                     knownProperties.add(prop);
                 }
             }
@@ -179,7 +171,7 @@ export class RobotManager {
         for (const [robotId, robot] of robot_map.entries()) {
             let arrivalTime = robot.time;
             if(robot.assignedLoc) {
-                const location_pin = this.location_set.get(robot.assignedLoc);
+                const location_pin = location_to_pin.get(robot.assignedLoc);
 
                 const dist = euclidean_distance(location_pin, robot.position);
 
@@ -233,7 +225,7 @@ export class RobotManager {
             robot.time = minimumArrivalTime;
             // Calculate new position based on movement towards assigned location
             if (robot.assignedLoc) {
-                const targetLocation = this.location_set.get(robot.assignedLoc);
+                const targetLocation = location_to_pin.get(robot.assignedLoc);
                 moveRobotTowardsLocation(robot, targetLocation || robot.position, time_diff);
             }
 
@@ -263,14 +255,14 @@ export class RobotManager {
         
     */
     generateCombinations(property: string, robot_map: RobotMap, visitedLocations: Set<string>): Array<Map<string, string>> {
-        const locations = Array.from(this.location_set.keys());
+        const locations = Array.from(location_to_pin.keys());
         const robotIds = Array.from(robot_map.keys());
         const combinations: Array<Map<string, string>> = [];
         
         // Get locations for the specific property
         const propertyLocations = locations.filter(loc => {
             // This would need to be updated based on how property-location mapping is stored
-            return this.location_to_prop[loc] && this.location_to_prop[loc].includes(property);
+            return location_to_prop[loc] && location_to_prop[loc].includes(property);
         });
 
         if (propertyLocations.length === 0) {

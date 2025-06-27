@@ -22,6 +22,7 @@ import {
 
 import AsciiAnimation from '@/components/AsciiAnimation';
 import generateFrames from '@/utils/generateFrames';
+import { on } from 'events';
 
 
 export default function Home() {
@@ -66,6 +67,7 @@ export default function Home() {
             position: [0, 0],
             handle_id: nanoid(),
           },
+          onNodeSelect: handleNodeSelect,
         },
         position: { x: 150, y: 100 },
       }];
