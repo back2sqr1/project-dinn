@@ -15,7 +15,6 @@ interface XYTimeStepNodeProps {
             resolvedQuestions: Map<string, string>;
         }
         edges: { handle_id: string; }
-        onNodeSelect?: (robotMap: Map<string, Robot>) => void;
     };
 }
 
@@ -27,8 +26,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     const handleNodeClick = useCallback(() => {
         setIsSelected(true);
         setTimeout(() => setIsSelected(false), 300);
-        data.onNodeSelect?.(data.head?.robot_map);
-    }, [data.onNodeSelect, data.head?.robot_map]);
+    }, [data.head?.robot_map]);
 
     const addNode = useCallback((to: TimeStepNode, sourceHandleId: string) => {
         const currentPosition = reactFlow.getNode(data.head?.id)?.position || { x: 0, y: 0 };
@@ -38,7 +36,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             data: { 
                 head: to, 
                 edges: { handle_id: nanoid() },
-                onNodeSelect: data.onNodeSelect
             },
             position: { x: currentPosition.x + 200, y: currentPosition.y }
         };
@@ -53,7 +50,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             animated: true,
             type: 'smoothstep',
         }]);
-    }, [reactFlow, data.head?.id, data.onNodeSelect]);
+    }, [reactFlow, data.head?.id]);
 
     const deleteNode = useCallback(() => {
         const edges = reactFlow.getEdges();
@@ -71,7 +68,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     }
 
     const { robot_map, next, id, query, type } = data.head;
-    const { onNodeSelect } = data;
 
     const isLeafNode = !next || next.length === 0;
     
@@ -130,7 +126,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                             <div key={robotId} style={{ fontSize: '9px'}}>
                                 <strong>{robotId}:</strong>
                                 <div style={{ paddingLeft: '8px' }}>
-                                    Position: [{robot.position.join(', ')}]<br/>
+                                    {robot.position.map(val => Math.round(val)).join(', ')}<br/>
                                     Cost: {Math.round(robot.cost * 100) / 100}<br/>
                                     Time: {robot.time ? `${Math.round(robot.time * 100) / 100}` : 'N/A'}<br/>
                                 </div>
@@ -150,7 +146,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 ) : (
                     <div style={{ fontSize: '12px', marginBottom: '2px' }}>
                         {Array.from(robot_map.entries()).map(([key, robot]) => 
-                            `${key}: ${robot.position} (${Math.round(robot.cost)})`
+                            `${key}: ${robot.position.map(val => Math.round(val)).join(', ')} (${Math.round(robot.cost)})`
                         ).join(', ')} ({query})
                     </div>
                 )}
@@ -169,13 +165,13 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                                 >
                                     {type === "Robot Assignment" ? (
                                         <div>{Array.from(node.robot_map.entries()).map(([key, robot]) => 
-                                            `${key}:${robot.position} (${robot.assignedLoc})`
+                                            `${key}:${robot.position.map(val => Math.round(val)).join(', ')} (${robot.assignedLoc})`
                                         ).join(', ')}</div>
-                                    ) : (
+                                    ) : type === "Query" ? (
                                         <div>{Array.from(node.resolvedQuestions.entries()).map(([key, value]) => 
                                             `${key}:${value}`
                                         ).join(', ')} ({node.query})</div>
-                                    )}
+                                    ) : <div>next</div>}
                                 </button>
                                 
                                 <Handle 

@@ -7,7 +7,7 @@ export class TimeStepNode {
     readonly id: string = nanoid();
     readonly robot_map: RobotMap;
     readonly query: string;
-    readonly type: 'Query' | 'Robot Assignment';
+    readonly type: 'Query' | 'Robot Assignment' | 'Robot Moving';
     readonly resolvedQuestions: Map<string, string>;
     next: TimeStepNode[] | null = [];
     visitedLocations: Set<string> = new Set();
@@ -24,7 +24,7 @@ export class TimeStepNode {
         robot_map: RobotMap;
         query: string;
         next: TimeStepNode[] | null;
-        type: 'Query' | 'Robot Assignment';
+        type: 'Query' | 'Robot Assignment' | 'Robot Moving';
         resolvedQuestions: Map<string, string>;
     }) {
         this.id = id;

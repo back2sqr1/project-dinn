@@ -66,7 +66,6 @@ export default function Home() {
             position: [0, 0],
             handle_id: nanoid(),
           },
-          onNodeSelect: handleNodeSelect,
         },
         position: { x: 150, y: 100 },
       }];

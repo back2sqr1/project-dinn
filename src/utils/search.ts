@@ -55,8 +55,26 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
             // adds cost and time
             const max_iterations = 2;
             let iteration = 0;
+            // Make Robot Moving Node as positions are updated
+            
+            let curNode = currentTimeStep;
+
             while (robot_manager.countTravelingRobots(robotMap) > 0 && iteration < max_iterations) {
                 robot_manager.updateRobotPositions(robotMap);
+                const robot_moving_node = new TimeStepNode({
+                    id: nanoid(),
+                    robot_map: structuredClone(robotMap),
+                    query: curNode.query,
+                    next: [],
+                    type: 'Robot Moving',
+                    resolvedQuestions: structuredClone(curNode.resolvedQuestions)
+                });
+                robot_moving_node.visitedLocations = new Set([...curNode.visitedLocations]);
+                if (curNode.next === null) {
+                    curNode.next = [];
+                }
+                curNode.next.push(robot_moving_node);
+                curNode = robot_moving_node; // Update current node to the new moving node
                 iteration++;
             }
 
@@ -75,17 +93,17 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
             const query_node = new TimeStepNode({
                 id: nanoid(),
                 robot_map: structuredClone(robotMap),
-                query: currentTimeStep.query,
+                query: curNode.query,
                 next: [],
                 type: 'Query',
-                resolvedQuestions: structuredClone(currentTimeStep.resolvedQuestions)
+                resolvedQuestions: structuredClone(curNode.resolvedQuestions)
             });
-            query_node.visitedLocations = new Set([...currentTimeStep.visitedLocations]);
+            query_node.visitedLocations = new Set([...curNode.visitedLocations]);
 
-            if (currentTimeStep.next === null) {
-                currentTimeStep.next = [];
+            if (curNode.next === null) {
+                curNode.next = [];
             }
-            currentTimeStep.next.push(query_node);
+            curNode.next.push(query_node);
             
             robot_manager.updateTimeStep(query_node, visitedLocations_thisStep);
             robotMap = structuredClone(robotMap_0); // Reset robot map for the next combination
