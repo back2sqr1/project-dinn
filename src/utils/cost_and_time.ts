@@ -70,3 +70,32 @@ export function highlightTime(node: TimeStepNode, timeValue: number): void {
         }
     }
 }
+
+export function getColor(highlightColor: string[], highlightMode: 'cost' | 'time' | 'none' = 'none') {
+    // If no highlight mode is selected, use default green
+    if (highlightMode === 'none') {
+        return '#00ee00';
+    }
+    
+    // If no colors are available, use default green
+    if (highlightColor.length === 0) {
+        return '#00ee00';
+    }
+    
+    // Based on highlight mode, choose the appropriate color
+    if (highlightMode === 'cost') {
+        // Look for blue color (cost highlighting)
+        const costColor = highlightColor.find(color => color === '#1e90ff');
+        return costColor || '#00ee00';
+    }
+    
+    if (highlightMode === 'time') {
+        // Look for yellow color (time highlighting)  
+        const timeColor = highlightColor.find(color => color === '#ffde21');
+        return timeColor || '#00ee00';
+    }
+    
+    // Fallback to default green
+    return '#00ee00';
+}
+

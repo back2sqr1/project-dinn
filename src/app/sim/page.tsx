@@ -11,6 +11,7 @@ import { nanoid } from 'nanoid';
 import '@xyflow/react/dist/style.css';
 import '@/styles/override_xy.css';
 import XYTimeStepNode from '@/components/XYTimeStepNode';
+import Legend, { HighlightMode } from '@/components/Legend';
 import {
   ReactFlow,
   Controls,
@@ -19,11 +20,14 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  Node,
+  Edge,
+  useReactFlow,
 } from '@xyflow/react';
 
 import AsciiAnimation from '@/components/AsciiAnimation';
 import generateFrames from '@/utils/generateFrames';
-import { determine_cost, determine_min_time, highlightCost, highlightTime} from '@/utils/cost_and_time';
+import { determine_cost, determine_min_time, getColor, highlightCost, highlightTime} from '@/utils/cost_and_time';
 
 export default function Home() {
   /*
@@ -34,14 +38,44 @@ export default function Home() {
   const [parsedData, setParsedData] = useState<any>(null);
   const [robots, setRobots] = useState<any[]>([]);
   const [selectedRobotMap, setSelectedRobotMap] = useState<Map<string, any> | null>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([{ id: '1', data: {}, type: 'xyTimeStepNode', position: { x: 0, y: 0 } }]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([{ id: 'e1-2', source: '1', target: '2' }]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [frames, setFrames] = useState<string[]>([]);
+  const [highlightMode, setHighlightMode] = useState<HighlightMode>('none');
+
+
   const nodeTypes = useMemo(() => ({ xyTimeStepNode: XYTimeStepNode }), []);
 
   const handleNodeSelect = useCallback((robotMap: Map<string, any>) => {
     setSelectedRobotMap(robotMap);
   }, []);
+
+  const handleHighlightModeChange = useCallback((mode: HighlightMode) => {
+    setHighlightMode(mode);
+    // Update edges with new highlight mode
+    
+  }, []);
+
+  // Update all nodes and edges when highlight mode changes
+  useEffect(() => {
+    if (nodes.length > 0) {
+      const updatedNodes = nodes.map(node => ({
+        ...node,
+        data: {
+          ...node.data,
+          highlightMode: highlightMode
+        }
+      }));
+      setNodes(updatedNodes);
+    }
+    if (edges.length > 0) {
+      const updatedEdges = edges.map(edge => ({
+        ...edge,
+        style: { stroke: edge.data?.highlightColor && Array.isArray(edge.data.highlightColor) ? getColor(edge.data.highlightColor, highlightMode) : edge.style?.stroke }
+      }));
+      setEdges(updatedEdges);
+    }
+  }, [highlightMode]); // Removed setNodes dependency to avoid infinite loop
 
 
   useEffect(() => {
@@ -57,7 +91,8 @@ export default function Home() {
   );
 
   useEffect(() => {
-    if (searchResults) {
+    if (searchResults && nodes.length === 0) {
+      // Only create new nodes if no nodes exist (initial load)
       const newNodes = [{
         id: searchResults.id,
         type: 'xyTimeStepNode',
@@ -68,6 +103,7 @@ export default function Home() {
             handle_id: nanoid(),
           },
           onNodeSelect: handleNodeSelect,
+          highlightMode: highlightMode,
         },
         position: { x: 150, y: 100 },
       }];
@@ -83,7 +119,7 @@ export default function Home() {
     }
 
     
-  }, [searchResults, handleNodeSelect]);
+  }, [searchResults, handleNodeSelect, highlightMode, nodes.length]);
 
 
   {
@@ -150,7 +186,10 @@ export default function Home() {
             >
             <Controls />
             <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-            
+            <Legend 
+              onHighlightModeChange={handleHighlightModeChange}
+              currentMode={highlightMode}
+            />
             </ReactFlow>
         </div>
       </div>

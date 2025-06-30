@@ -15,11 +15,21 @@ const RobotDescriptions: React.FC<RobotDescriptionsProps> = ({ robot_count }) =>
 
         if (savedRobots) {
             parsedRobots = JSON.parse(savedRobots);
+
+            if( parsedRobots.length < robot_count) {
+                // If there are fewer robots than the required count, fill in the rest with default values
+                const additionalRobots = Array.from({ length: robot_count - parsedRobots.length }, (_, index) => ({
+                    id: String.fromCharCode(65 + parsedRobots.length + index),
+                    position: [1, 1] as [number, number],
+                    velocity: 1,
+                }));
+                parsedRobots = [...parsedRobots, ...additionalRobots];
+            }
         }
         else {
             parsedRobots = Array.from({ length: robot_count }, (_, index) => ({
                 id: String.fromCharCode(65 + index),
-                position: [1, 1],
+                position: [1, 1] as [number, number],
                 velocity: 1,
             }));
         }

@@ -3,7 +3,7 @@ import { TimeStepNode, reachedDestination } from '@/utils/TimeStepNode';
 import { Robot } from '@/utils/Robot';
 import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
-import { inherits } from 'util';
+import { getColor } from '@/utils/cost_and_time';
 
 interface XYTimeStepNodeProps {
     data: {
@@ -19,6 +19,7 @@ interface XYTimeStepNodeProps {
         }
         edges: { handle_id: string; }
         onNodeSelect?: (robotMap: Map<string, Robot>) => void;
+        highlightMode?: 'cost' | 'time' | 'none';
     };
 }
 
@@ -47,15 +48,6 @@ const deleteButtonStyle = {
     justifyContent: 'center'
 };
 
-function getColor(highlightColor: string[], index = 0) {
-    if (highlightColor.length === 0) {
-        return '#00ee00';
-    }
-    if (highlightColor.length === 1) {
-        return highlightColor[0];
-    }
-    return highlightColor[index];
-}
 
 
 function getSelectedStyle(isSelected: boolean) {
@@ -150,11 +142,12 @@ function getButtonContent(node: TimeStepNode, parentType: string): string {
     return node.toString(parentType);
 }
 
-function NextNodeButton({ node, nodeIndex, onAddNode, parentType }: {
+function NextNodeButton({ node, nodeIndex, onAddNode, parentType, highlightMode }: {
     node: TimeStepNode;
     nodeIndex: number;
     onAddNode: (node: TimeStepNode, handleId: string) => void;
     parentType?: string;
+    highlightMode?: 'cost' | 'time' | 'none';
 }) {
     const handleId = `next-${nodeIndex}`;
     let buttonContent = "";
@@ -170,7 +163,7 @@ function NextNodeButton({ node, nodeIndex, onAddNode, parentType }: {
                     padding: '2px', 
                     fontSize: '10px', 
                     display: 'block',
-                    color: getColor(node.highlightColor)
+                    color: getColor(node.highlightColor, highlightMode || 'none')
                 }}
                 onClick={() => onAddNode(node, handleId)}
             >
@@ -196,6 +189,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     const { data } = props;
     const reactFlow = useReactFlow();
     const [isSelected, setIsSelected] = useState(false);
+    const highlightMode = data.highlightMode || 'none';
 
     const handleNodeClick = useCallback(() => {
         setIsSelected(true);
@@ -212,7 +206,8 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             data: { 
                 head: to, 
                 edges: { handle_id: nanoid() },
-                onNodeSelect: data.onNodeSelect
+                onNodeSelect: data.onNodeSelect,
+                highlightMode: highlightMode
             },
             position: { x: currentPosition.x + 200, y: currentPosition.y }
         };
@@ -223,12 +218,16 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             source: data.head?.id,
             target: to.id,
             sourceHandle: sourceHandleId,
+            data: { highlightColor: to.highlightColor },
             targetHandle: 'target',
             animated: true,
             type: 'smoothstep',
-            style: { stroke: getColor(to.highlightColor) }
+            style: { stroke: getColor(to.highlightColor, highlightMode) }
         }]);
-    }, [reactFlow, data.head?.id, data.onNodeSelect]);
+        
+        
+    
+    }, [reactFlow, data.head?.id, data.onNodeSelect, highlightMode]);
 
     const deleteNode = useCallback(() => {
         const edges = reactFlow.getEdges();
@@ -247,8 +246,8 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     return (
         <div 
             style={{ ...nodeStyle, ...selectedStyle, 
-                color: getColor(data.head.highlightColor),
-                borderColor: getColor(data.head.highlightColor)
+                color: getColor(data.head.highlightColor, highlightMode),
+                borderColor: getColor(data.head.highlightColor, highlightMode)
             }} 
             title={id} 
             onClick={handleNodeClick}
@@ -283,6 +282,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                             nodeIndex={nodeIndex}
                             onAddNode={addNode}
                             parentType={data.head.type}
+                            highlightMode={highlightMode}
                         />
                     ))}
                 </div>

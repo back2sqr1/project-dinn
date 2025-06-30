@@ -105,5 +105,6 @@ describe("Search Functionality", () => {
 
         expect(time).toBeLessThan(time2);
     });
+    
 
 });
