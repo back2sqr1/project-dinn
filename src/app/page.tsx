@@ -6,7 +6,6 @@ import { toDot } from 'ts-graphviz';
 import { Typewriter } from 'nextjs-simple-typewriter';
 import Link from 'next/link';
 import createGraphFromBeliefDiagram from '@/utils/createGraphFromBeliefDiagram';
-import { create } from 'domain';
 
 const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
 
@@ -23,26 +22,14 @@ const initialParsed = {
     "p''",
     "p'''",
     "p'''",
-    "true",
-    "false"
   ],
-  "locations": {
-    "a": {
-      "pin": [5, 5]
+  "locations" : {
+        "a" : [5, 5],
+        "b" : [30, 7],
+        "c" : [15, 5],
+        "d" : [0, 0],
+        "e" : [10, 10]
     },
-    "b": {
-      "pin": [30, 7]
-    },
-    "c": {
-      "pin": [15, 5]
-    },
-    "d": {
-      "pin": [0, 0]
-    },
-    "e": {
-      "pin": [10, 10]
-    }
-  },
   "edges": {
     "p": ["p'", "p'''"],
     "p'": ["p'''", "p''"],
@@ -161,7 +148,7 @@ export default function Home() {
                     return (
                       <tr key={locationId}>
                         <td className="px-4 py-2">{locationId}</td>
-                        <td className="px-4 py-2">[{locationData.pin.join(', ')}]</td>
+                        <td className="px-4 py-2">[{locationData.join(', ')}]</td>
                         <td className="px-4 py-2">{properties.length > 0 ? properties.join(', ') : 'None'}</td>
                       </tr>
                     );

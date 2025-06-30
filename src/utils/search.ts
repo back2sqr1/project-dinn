@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { euclidean_distance, _location_to_pin, _location_to_prop, properties_set } from './props_and_locations';
 import { TimeStepNode } from '@/utils/TimeStepNode';
 import { RobotManager } from '@/utils/RobotManager';
+import { Robot } from './Robot';
 
 
 export let location_to_pin: Map<string, [number, number]> = new Map(); // map of locations with their coordinates
@@ -17,11 +18,12 @@ function printTimeSteps(robotManager: RobotManager) {
     console.log(robotManager.head_time_step.longPrint());
 }
 
-export default function search(parsedData : any, robots: any): TimeStepNode | null {
+export default function search(parsedData : any, robots: Map<string, Robot>): TimeStepNode | null {
     if (!parsedData || !robots) {
         return null;
     }
     location_to_pin = _location_to_pin(parsedData);
+    const props = properties_set(parsedData);
     const prop_to_location = parsedData.prop_to_location || {};
     location_to_prop = _location_to_prop(prop_to_location);
     const starting_prop = parsedData.starting_prop || "p";
@@ -33,8 +35,7 @@ export default function search(parsedData : any, robots: any): TimeStepNode | nu
 
     // cast next_query to Map<string, Array<string>>
     const next_query = new Map<string, Array<string>>(Object.entries(parsedData.edges));
-
-    const robot_manager = new RobotManager(robots, next_query, starting_prop);
+    const robot_manager = new RobotManager(robots, next_query, starting_prop, props);
     
     /* Strategy:
         1. Generate all combinations of robot assignments to locations for the starting property.

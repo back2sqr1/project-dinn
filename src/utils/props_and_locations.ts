@@ -8,24 +8,15 @@ export function euclidean_distance(location_a: any, location_b: any): number {
 export function _location_to_pin(parsedData: any) : Map<string, [number, number]> {
     const locations: Map<string, [number, number]> = new Map();
     for (const [key, value] of Object.entries(parsedData.locations)) {
-        if (value && typeof value === 'object' && 'pin' in value) {
-            const pin = (value as any).pin;
-            if (Array.isArray(pin) && pin.length >= 2) {
-                locations.set(key, [pin[0], pin[1]]);
-            }
+        if (value && Array.isArray(value) && value.length >= 2) {
+            locations.set(key, [value[0], value[1]]);
         }
     }
     return locations;
 }
 
 export function properties_set(parsedData: any) : Array<string> {
-    const properties: Array<string> = [];
-    for (const [key, value] of Object.entries(parsedData.props)) {
-        if (value && typeof value === 'string') {
-            properties.push(value);
-        }
-    }
-    return properties;
+    return parsedData.props;
 }
 
 export function _location_to_prop(prop_to_location: any) {

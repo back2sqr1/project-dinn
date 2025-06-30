@@ -4,9 +4,17 @@ export default function createGraphFromBeliefDiagram(parsedData: any): any {
     bgcolor: "transparent"
   });
     
-
+    // set of props
+    const propsSet = new Set<string>(parsedData.props);
+    const edges = new Map<string, string[]>(Object.entries(parsedData.edges));
+    console.log("Edges: ", edges, typeof edges);
+    for (const list of edges.values()) {
+      for (const prop of list) {
+        propsSet.add(prop);
+      }
+    }
     // Add nodes for each proposition
-    parsedData.props.forEach((prop: string) => {
+    propsSet.forEach((prop: string) => {
       const node = new Node(prop, {
         shape: 'oval',
         fontcolor: 'green',

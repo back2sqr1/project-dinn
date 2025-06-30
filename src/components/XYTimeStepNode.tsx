@@ -3,12 +3,15 @@ import { TimeStepNode, reachedDestination } from '@/utils/TimeStepNode';
 import { Robot } from '@/utils/Robot';
 import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
+import { inherits } from 'util';
 
 interface XYTimeStepNodeProps {
     data: {
         head: {
             robot_map: Map<string, Robot>;
             query: string;
+            highlightColor: string[];
+            getTime: () => number; // Function that returns the current time step
             next: TimeStepNode[];
             id: string;
             type: "Robot Assignment" | "Query" | "Robot Moving";
@@ -44,6 +47,16 @@ const deleteButtonStyle = {
     justifyContent: 'center'
 };
 
+function getColor(highlightColor: string[], index = 0) {
+    if (highlightColor.length === 0) {
+        return '#00ee00';
+    }
+    if (highlightColor.length === 1) {
+        return highlightColor[0];
+    }
+    return highlightColor[index];
+}
+
 
 function getSelectedStyle(isSelected: boolean) {
     return {
@@ -61,14 +74,13 @@ function EmptyNode() {
     );
 }
 
-function NodeHeader({ isLeafNode, robotMap, query, type }: {
+function NodeHeader({ isLeafNode, time, query, type }: {
     isLeafNode: boolean;
-    robotMap: Map<string, Robot>;
+    time: number;
     query: string;
     type: string;
 }) {
-    const maxTime = Math.max(...Array.from(robotMap.values()).map(robot => robot.time || 0));
-    const timeDisplay = isLeafNode ? 'Leaf Node' : `Time: ${Math.round(maxTime || 0)}`;
+    const timeDisplay = isLeafNode ? '' : `Time: ${Math.round(time || 0)}`;
     const typeAbbreviation = isLeafNode ? 'LEAF' : 
         type === "Query" ? "Q" : 
         type === "Robot Assignment" ? "RA" : 
@@ -101,34 +113,23 @@ function RobotInfo({ robotId, robot }: { robotId: string; robot: Robot }) {
 function ResolvedQuestions({ resolvedQuestions }: { resolvedQuestions: Map<string, string> }) {
     return (
         <div style={{ fontSize: '9px', marginTop: '6px' }}>
-            <strong>Resolved Questions:</strong>
-            {Array.from(resolvedQuestions.entries()).map(([key, value]) => (
-                <div key={key} style={{ paddingLeft: '8px' }}>
-                    {key}: {value}
-                </div>
-            ))}
+            [{Array.from(resolvedQuestions.entries()).map(([question, answer], index, array) => (
+            <span key={question}>{question}: {answer}{index < array.length - 1 ? ', ' : ''}</span>
+            ))}]
         </div>
     );
 }
 
-function LeafNodeContent({ query, robotMap, type, resolvedQuestions }: {
-    query: string;
+function LeafNodeContent({ robotMap, resolvedQuestions }: {
     robotMap: Map<string, Robot>;
-    type: string;
     resolvedQuestions: Map<string, string>;
 }) {
     return (
         <div>
-            <div style={{ fontSize: '11px', fontWeight: 'bold' }}>
-                Query: {query}
-            </div>
-            <div style={{ fontSize: '10px' }}>
-                <strong>Robots:</strong>
-            </div>
             {Array.from(robotMap.entries()).map(([robotId, robot]) => (
                 <RobotInfo key={robotId} robotId={robotId} robot={robot} />
             ))}
-            {type === "Query" && <ResolvedQuestions resolvedQuestions={resolvedQuestions} />}
+            <ResolvedQuestions resolvedQuestions={resolvedQuestions} />
         </div>
     );
 }
@@ -152,7 +153,6 @@ function getButtonContent(node: TimeStepNode, parentType: string): string {
 function NextNodeButton({ node, nodeIndex, onAddNode, parentType }: {
     node: TimeStepNode;
     nodeIndex: number;
-    label?: string;
     onAddNode: (node: TimeStepNode, handleId: string) => void;
     parentType?: string;
 }) {
@@ -166,7 +166,12 @@ function NextNodeButton({ node, nodeIndex, onAddNode, parentType }: {
         <div key={nodeIndex} style={{ position: 'relative', marginBottom: '2px' }}>
             <button 
                 className="text-left hover:bg-[#1b2e1b] px-[10px] w-full border rounded"
-                style={{ padding: '2px', fontSize: '10px', display: 'block' }}
+                style={{ 
+                    padding: '2px', 
+                    fontSize: '10px', 
+                    display: 'block',
+                    color: getColor(node.highlightColor)
+                }}
                 onClick={() => onAddNode(node, handleId)}
             >
                 {buttonContent}
@@ -221,6 +226,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             targetHandle: 'target',
             animated: true,
             type: 'smoothstep',
+            style: { stroke: getColor(to.highlightColor) }
         }]);
     }, [reactFlow, data.head?.id, data.onNodeSelect]);
 
@@ -240,7 +246,10 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
 
     return (
         <div 
-            style={{ ...nodeStyle, ...selectedStyle }} 
+            style={{ ...nodeStyle, ...selectedStyle, 
+                color: getColor(data.head.highlightColor),
+                borderColor: getColor(data.head.highlightColor)
+            }} 
             title={id} 
             onClick={handleNodeClick}
         >
@@ -250,17 +259,15 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             <div>
                 <NodeHeader 
                     isLeafNode={isLeafNode} 
-                    robotMap={robot_map} 
+                    time = {data.head.getTime()}
                     query={query} 
                     type={type} 
                 />
                 
                 {isLeafNode ? (
-                    <LeafNodeContent 
-                        query={query} 
-                        robotMap={robot_map} 
-                        type={type} 
-                        resolvedQuestions={resolvedQuestions} 
+                    <LeafNodeContent
+                        robotMap={robot_map}
+                        resolvedQuestions={resolvedQuestions}
                     />
                 ) : (
                     <NonLeafNodeContent robotMap={robot_map} />
@@ -274,7 +281,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                             key={nodeIndex}
                             node={node}
                             nodeIndex={nodeIndex}
-                            label={node.label || ""}
                             onAddNode={addNode}
                             parentType={data.head.type}
                         />

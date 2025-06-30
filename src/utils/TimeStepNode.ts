@@ -26,7 +26,7 @@ export class TimeStepNode {
     readonly query: string;
     readonly type: 'Query' | 'Robot Assignment' | 'Robot Moving';
     readonly resolvedQuestions: Map<string, string>;
-    readonly label: string = 'TimeStepNode';
+    highlightColor: string[] = [];
     next: TimeStepNode[] | null = [];
     visitedLocations: Set<string> = new Set();
     time : number = 0;
@@ -37,7 +37,7 @@ export class TimeStepNode {
         query = '',
         next = null,
         type = 'Robot Assignment',
-        label = 'TimeStepNode',
+        highlightColor = [],
         resolvedQuestions,
     }: {
         id : string;
@@ -45,7 +45,7 @@ export class TimeStepNode {
         query: string;
         next: TimeStepNode[] | null;
         type: 'Query' | 'Robot Assignment' | 'Robot Moving';
-        label?: string;
+        highlightColor?: string[];
         resolvedQuestions: Map<string, string>;
     }) {
         this.id = id;
@@ -53,7 +53,7 @@ export class TimeStepNode {
         this.query = query;
         this.next = next;
         this.type = type;
-        this.label = label;
+        this.highlightColor = highlightColor;
         this.resolvedQuestions = resolvedQuestions;
         this.time = 0;
     }
@@ -96,6 +96,22 @@ export class TimeStepNode {
             }).join(', ');
     }
 
+    getCost(): number {
+        let cost = 0;
+        for (const robot of this.robot_map.values()) {
+            cost += robot.cost;
+        }
+        return cost;
+    }
+
+    getTime(): number {
+        let maxTime = 0;
+        for (const robot of this.robot_map.values()) {
+            maxTime = Math.max(maxTime, robot.time);
+        }
+        return maxTime;
+    }
+
     toString(parentType: string): string {
         const typeCode = this.type === "Query" ? "Q" : this.type === "Robot Assignment" ? "RA" : "RM";
 
@@ -109,7 +125,7 @@ export class TimeStepNode {
 
         if (parentType === "Robot Assignment") {
             return Array.from(this.robot_map.entries())
-                .map(([key, robot]) => `${key}:${robot.position.map(val => Math.round(val)).join(', ')} (${robot.assignedLoc})`)
+                .map(([key, robot]) => `${key}: (${robot.assignedLoc})`)
                 .join(', ') + ` (${typeCode})`;
         }
 

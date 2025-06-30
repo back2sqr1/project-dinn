@@ -6,7 +6,7 @@ import { TimeStepNode } from '@/utils/TimeStepNode';
 import { location_to_pin, location_to_prop, pin_to_location } from './search';
 
 export type RobotMap = Map<string, Robot>;
-function createRobotMap(robots: any[]): RobotMap {
+export function createRobotMap(robots: any[]): RobotMap {
     const robotMap = new Map<string, Robot>();
     for (const robot of robots) {
         if (robot.id && robot.velocity && Array.isArray(robot.position) && robot.position.length) {
@@ -33,6 +33,7 @@ export class RobotManager {
     // Queue of time steps to be processed
     // only contains ra nodes
     time_step_queue: Queue<TimeStepNode> = new Queue<TimeStepNode>();
+    props : Array<string> = []; // properties that are being tracked
 
     // time step tree initialization:
     /*
@@ -41,11 +42,12 @@ export class RobotManager {
         own robot_map
         * Edges are added as the tree is being made
     */
-    constructor(robots: any[], next_question: Map<string, Array<string>>, initial_question: string) {
-        const initialRobotMap = createRobotMap(robots);
+    constructor(robots: Map<string, Robot>, next_question: Map<string, Array<string>>, initial_question: string, props: Array<string> = []) {
+        const initialRobotMap = structuredClone(robots);
 
         this.next_question = next_question || null; // Set the next question if provided, otherwise null
         this.initial_question = initial_question;
+        this.props = props;
 
         const robotMapCopy = structuredClone(initialRobotMap); // Create a deep copy of the initial robot map
 
@@ -159,7 +161,7 @@ export class RobotManager {
             currentTimeStep.next = currentTimeStep.next || [];
             currentTimeStep.next.push(nextTimeStep);
 
-            if( nextQuestion != "true" && nextQuestion != "false") {
+            if(this.props.includes(nextQuestion)) {
                 // Enqueue the next time step for processing
                 this.time_step_queue.enqueue(nextTimeStep);
             }
@@ -200,6 +202,7 @@ export class RobotManager {
                 // Robot is already at the target location or can reach it
                 // within the tolerance
                 robot.position = [targetLocation[0], targetLocation[1]];
+                robot.cost += distance; // Update cost to the arrival time
             } else {
                 // Robot moves towards the target location
                 const direction = [
@@ -216,9 +219,11 @@ export class RobotManager {
                     robot.position[0] + normalizedDirection[0] * time_diff * robot.velocity,
                     robot.position[1] + normalizedDirection[1] * time_diff * robot.velocity,
                 ];
+                robot.cost += distanceTraveled;
             }
+
             // Adding Cost to the robot based on distance
-            robot.cost += distanceTraveled;
+            
         }
 
         // update time and position based on earliest arrival time

@@ -30,17 +30,17 @@ const generateFrame = (
             
             // Location markers
             let robotFound = false;
-            let robotMarker = "A";
+            let robotMarker = "";
             const roundedRobot = robots.map(robot => ({
                 ...robot,
                 position: [Math.round(robot.position[0]), Math.round(robot.position[1])]
             }));
             for (const robot of roundedRobot) {
+                robotMarker = robot.id;
                 if (robot.position[0] === x && robot.position[1] === y) {
                     robotFound = true;
                     break;
                 }
-                robotMarker = String.fromCharCode(robotMarker.charCodeAt(0) + 1);
             }
 
             if (contains(locations, [x, y])) {

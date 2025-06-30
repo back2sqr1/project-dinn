@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import search from '@/utils/search';
 import { TimeStepNode } from '@/utils/TimeStepNode';
+import { createRobotMap } from '@/utils/RobotManager';
 
 
 import { nanoid } from 'nanoid';
@@ -22,8 +23,7 @@ import {
 
 import AsciiAnimation from '@/components/AsciiAnimation';
 import generateFrames from '@/utils/generateFrames';
-import { on } from 'events';
-
+import { determine_cost, determine_min_time, highlightCost, highlightTime} from '@/utils/cost_and_time';
 
 export default function Home() {
   /*
@@ -52,7 +52,7 @@ export default function Home() {
 
   // search returns a TimeStepNode or null
   const searchResults = useMemo((): TimeStepNode | null =>
-    search(parsedData, robots),
+    search(parsedData, createRobotMap(robots)),
     [parsedData, robots]
   );
 
@@ -72,7 +72,17 @@ export default function Home() {
         position: { x: 150, y: 100 },
       }];
       setNodes(newNodes);
+
+      // set cost
+      const cost = determine_cost(searchResults);
+      highlightCost(searchResults, cost);
+
+      const time = determine_min_time(searchResults);
+      highlightTime(searchResults, time);
+      
     }
+
+    
   }, [searchResults, handleNodeSelect]);
 
 
