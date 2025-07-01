@@ -18,7 +18,7 @@ export let location_to_prop: { [key: string]: string[] } = {}; // map of locatio
 //     console.log(robotManager.head_time_step.longPrint());
 // }
 
-export default function search(parsedData : any, robots: Map<string, Robot>): TimeStepNode | null {
+export default function search(parsedData : any, robots: Map<string, Robot>, allowWaiting: boolean = true): TimeStepNode | null {
     if (!parsedData || !robots) {
         return null;
     }
@@ -36,6 +36,7 @@ export default function search(parsedData : any, robots: Map<string, Robot>): Ti
     // cast next_query to Map<string, Array<string>>
     const next_query = new Map<string, Array<string>>(Object.entries(parsedData.edges));
     const robot_manager = new RobotManager(robots, next_query, starting_prop, props);
+    robot_manager.allowWaiting = allowWaiting; // Set the allowWaiting parameter
     
     /* Strategy:
         1. Generate all combinations of robot assignments to locations for the starting property.
@@ -84,8 +85,10 @@ export default function search(parsedData : any, robots: Map<string, Robot>): Ti
                 if (curNode.next === null) {
                     curNode.next = [];
                 }
-                curNode.next.push(robot_moving_node);
-                curNode = robot_moving_node; // Update current node to the new moving node
+                if (allowWaiting) {
+                    curNode.next.push(robot_moving_node);
+                    curNode = robot_moving_node; // Update current node to the new moving node
+                }
 
                 // Check if robot has reached its destination
                 for (const [robotId, robot] of robotMap.entries()) {
@@ -112,10 +115,11 @@ export default function search(parsedData : any, robots: Map<string, Robot>): Ti
                 if (curNode.next === null) {
                     curNode.next = [];
                 }
-                curNode.next.push(query_node);
-                curNode = query_node; // Update current node to the new query node
-                
-                robot_manager.updateTimeStep(query_node, visitedLocations_thisStep);
+                if(allowWaiting || curNode.type === "Robot Assignment") {
+                    curNode.next.push(query_node);
+                    curNode = query_node; // Update current node to the new query node
+                    robot_manager.updateTimeStep(curNode, visitedLocations_thisStep);
+                }
             }
 
             

@@ -39,6 +39,7 @@ export class RobotManager {
 
     next_question: Map<string, Array<string>>;
     initial_question: string;
+    allowWaiting: boolean = true; // Default to true
     // Persistency on states - Needs to be a tree structure
     head_time_step: TimeStepNode | null = null; // head of the time step tree
 
@@ -273,6 +274,7 @@ export class RobotManager {
         const locations = Array.from(location_to_pin.keys());
         const robotIds = Array.from(robot_map.keys());
         const combinations: Array<Map<string, string>> = [];
+        const allowWaiting = this.allowWaiting; // Capture the value for use in nested function
         
         // Get locations for the specific property
         const propertyLocations = locations.filter(loc => {
@@ -299,7 +301,9 @@ export class RobotManager {
 
             
             // Option 1: Don't assign this robot (stays still)
-            generateAssignments(robotIndex + 1, currentAssignment, usedLocations);
+            if (allowWaiting) {
+                generateAssignments(robotIndex + 1, currentAssignment, usedLocations);
+            }
             
             // Option 2: Assign robot to available locations
             for (const location of locations) {

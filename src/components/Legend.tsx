@@ -7,9 +7,11 @@ interface LegendProps {
   currentMode: HighlightMode;
   onReorganizeLayout?: () => void;
   onClearTree?: () => void;
+  allowWaiting?: boolean;
+  onAllowWaitingChange?: (allowWaiting: boolean) => void;
 }
 
-const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode, onReorganizeLayout, onClearTree }) => {
+const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode, onReorganizeLayout, onClearTree, allowWaiting = true, onAllowWaitingChange }) => {
   const legendItems = [
     { color: '#00ee00', label: 'Default (No Highlight)', mode: 'none' as HighlightMode },
     { color: '#1e90ff', label: 'Minimum Cost', mode: 'cost' as HighlightMode },
@@ -142,6 +144,42 @@ const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode, onR
           >
             🗑️ Clear Tree
           </button>
+        </div>
+      )}
+      
+      {onAllowWaitingChange && (
+        <div style={{ 
+          marginTop: (onReorganizeLayout || onClearTree) ? '8px' : '8px', 
+          paddingTop: '8px', 
+          borderTop: '1px solid rgba(255, 255, 255, 0.3)' 
+        }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '12px',
+            cursor: 'pointer',
+            userSelect: 'none'
+          }}>
+            <input
+              type="checkbox"
+              checked={allowWaiting}
+              onChange={(e) => onAllowWaitingChange(e.target.checked)}
+              style={{
+                marginRight: '8px',
+                cursor: 'pointer'
+              }}
+            />
+            Allow Robot Waiting
+          </label>
+          <div style={{
+            fontSize: '10px',
+            color: 'rgba(255, 255, 255, 0.6)',
+            marginTop: '4px',
+            marginLeft: '20px'
+          }}>
+            Robots can stay idle instead of moving
+          </div>
         </div>
       )}
     </div>

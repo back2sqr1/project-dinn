@@ -67,6 +67,7 @@ export default function Home() {
   const [frames, setFrames] = useState<string[]>([]);
   const [highlightMode, setHighlightMode] = useState<HighlightMode>('none');
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [allowWaiting, setAllowWaiting] = useState<boolean>(true);
 
 
   const nodeTypes = useMemo(() => ({ xyTimeStepNode: XYTimeStepNode }), []);
@@ -96,6 +97,15 @@ export default function Home() {
     setNodes([]);
     setEdges([]);
     setSelectedRobotMap(null);
+  }, [setNodes, setEdges]);
+
+  const handleAllowWaitingChange = useCallback((newAllowWaiting: boolean) => {
+    setAllowWaiting(newAllowWaiting);
+    // Clear the current tree since we need to regenerate with new waiting settings
+    setNodes([]);
+    setEdges([]);
+    setSelectedRobotMap(null);
+    // The tree will be regenerated automatically by the searchResults effect
   }, [setNodes, setEdges]);
 
   // Update all nodes and edges when highlight mode changes
@@ -128,8 +138,8 @@ export default function Home() {
 
   // search returns a TimeStepNode or null
   const searchResults = useMemo((): TimeStepNode | null =>
-    search(parsedData, createRobotMap(robots)),
-    [parsedData, robots]
+    search(parsedData, createRobotMap(robots), allowWaiting),
+    [parsedData, robots, allowWaiting]
   );
 
   useEffect(() => {
@@ -235,6 +245,8 @@ export default function Home() {
                 currentMode={highlightMode}
                 onReorganizeLayout={handleReorganizeLayout}
                 onClearTree={handleClearTree}
+                allowWaiting={allowWaiting}
+                onAllowWaitingChange={handleAllowWaitingChange}
               />
             </ReactFlowWrapper>
             </ReactFlow>
