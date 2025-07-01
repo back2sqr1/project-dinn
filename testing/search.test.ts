@@ -46,7 +46,7 @@ describe("Search Functionality", () => {
         }));
     });
 
-    test("Weird Location and Properties", () => {
+    test("Weird Location and Properties Names", () => {
         // changing names of robots and locations
 
         const newParsedData = structuredClone(parsedData);

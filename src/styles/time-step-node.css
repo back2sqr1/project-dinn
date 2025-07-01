@@ -1,0 +1,106 @@
+/* TimeStepNode component styles */
+
+.time-step-node {
+    border: 1px #00ee00 solid;
+    padding: 10px;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.time-step-node.selected {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgb(6, 147, 6);
+}
+
+.time-step-node:not(.selected) {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 0, 0, 0.7);
+}
+
+.delete-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.empty-node {
+    border: 1px solid;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.node-header h4 {
+    margin: 0;
+}
+
+.node-type-badge {
+    color: white;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+.robot-info {
+    font-size: 9px;
+}
+
+.robot-details {
+    padding-left: 8px;
+}
+
+.resolved-questions {
+    font-size: 9px;
+    margin-top: 6px;
+}
+
+.non-leaf-content {
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.next-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.next-button-wrapper {
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.next-button {
+    padding: 2px;
+    font-size: 10px;
+    display: block;
+}
+
+.source-handle {
+    top: 60%;
+    transform: translateY(-50%);
+    position: absolute;
+    right: -13px;
+}
