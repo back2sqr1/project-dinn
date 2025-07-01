@@ -9,14 +9,14 @@ export let location_to_pin: Map<string, [number, number]> = new Map(); // map of
 export const pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
 export let location_to_prop: { [key: string]: string[] } = {}; // map of locations to properties
 
-function printTimeSteps(robotManager: RobotManager) {
-    if (!robotManager.head_time_step) {
-        console.log("No time steps available.");
-        return;
-    }
-    console.log("Time Steps:");
-    console.log(robotManager.head_time_step.longPrint());
-}
+// function printTimeSteps(robotManager: RobotManager) {
+//     if (!robotManager.head_time_step) {
+//         console.log("No time steps available.");
+//         return;
+//     }
+//     console.log("Time Steps:");
+//     console.log(robotManager.head_time_step.longPrint());
+// }
 
 export default function search(parsedData : any, robots: Map<string, Robot>): TimeStepNode | null {
     if (!parsedData || !robots) {
@@ -62,8 +62,7 @@ export default function search(parsedData : any, robots: Map<string, Robot>): Ti
             
             /* update locations going to visit */
             // adds cost and time
-            const max_iterations = 2;
-            // let iteration = 0;
+
             // Make Robot Moving Node as positions are updated
             
             let curNode = currentTimeStep;

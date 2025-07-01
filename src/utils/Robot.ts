@@ -33,4 +33,14 @@ export class Robot {
         return `Robot[vel=${this.velocity}, pos=[${Math.round(this.position[0])}, ${Math.round(this.position[1])}], time=${Math.round(this.time)}, cost=${Math.round(this.cost)}]`;
     }
 
+    equals(other: Robot): boolean {
+        return this.id === other.id &&
+            this.velocity === other.velocity &&
+            this.position[0] === other.position[0] &&
+            this.position[1] === other.position[1] &&
+            this.assignedLoc === other.assignedLoc &&
+            this.time === other.time &&
+            this.cost === other.cost;
+    }
+
 }

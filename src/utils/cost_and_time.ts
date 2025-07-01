@@ -1,4 +1,12 @@
 import { TimeStepNode } from './TimeStepNode';
+
+// Floating point comparison tolerance
+const EPSILON = 1e-10;
+
+function isEqual(a: number, b: number): boolean {
+    return Math.abs(a - b) < EPSILON;
+}
+
 // called from head
 const highlightColorCost = '#1e90ff'; // Blue color for highlighting
 const highlightColorTime = '#ffde21'; // Yellow color
@@ -38,7 +46,7 @@ export function highlightCost(node: TimeStepNode, costValue: number): void {
     else if (node.type === "Robot Assignment" || node.type === "Query") {
 
         for (const nextNode of node.next) {
-            if (determine_cost(nextNode) === costValue) {
+            if (isEqual(determine_cost(nextNode), costValue)) {
                 highlightCost(nextNode, costValue);
             }
         }
@@ -65,7 +73,7 @@ export function highlightTime(node: TimeStepNode, timeValue: number): void {
         return;
     }
     for (const nextNode of node.next) {
-        if (determine_min_time(nextNode) === timeValue) {
+        if (isEqual(determine_min_time(nextNode), timeValue)) {
             highlightTime(nextNode, timeValue);
         }
     }

@@ -5,9 +5,11 @@ export type HighlightMode = 'cost' | 'time' | 'none';
 interface LegendProps {
   onHighlightModeChange: (mode: HighlightMode) => void;
   currentMode: HighlightMode;
+  onReorganizeLayout?: () => void;
+  onClearTree?: () => void;
 }
 
-const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode }) => {
+const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode, onReorganizeLayout, onClearTree }) => {
   const legendItems = [
     { color: '#00ee00', label: 'Default (No Highlight)', mode: 'none' as HighlightMode },
     { color: '#1e90ff', label: 'Minimum Cost', mode: 'cost' as HighlightMode },
@@ -87,6 +89,61 @@ const Legend: React.FC<LegendProps> = ({ onHighlightModeChange, currentMode }) =
       }}>
         Click to toggle highlighting mode
       </div>
+      
+      {onReorganizeLayout && (
+        <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.3)' }}>
+          <button
+            onClick={onReorganizeLayout}
+            style={{
+              width: '100%',
+              background: 'rgba(100, 150, 255, 0.2)',
+              border: '1px solid rgba(100, 150, 255, 0.5)',
+              color: 'white',
+              padding: '6px 8px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              transition: 'all 0.2s ease',
+              marginBottom: '6px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(100, 150, 255, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(100, 150, 255, 0.2)';
+            }}
+          >
+            📐 Reorganize Layout
+          </button>
+        </div>
+      )}
+      
+      {onClearTree && (
+        <div style={{ marginTop: onReorganizeLayout ? '0px' : '8px', paddingTop: onReorganizeLayout ? '0px' : '8px', borderTop: onReorganizeLayout ? 'none' : '1px solid rgba(255, 255, 255, 0.3)' }}>
+          <button
+            onClick={onClearTree}
+            style={{
+              width: '100%',
+              background: 'rgba(255, 100, 100, 0.2)',
+              border: '1px solid rgba(255, 100, 100, 0.5)',
+              color: 'white',
+              padding: '6px 8px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 100, 100, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 100, 100, 0.2)';
+            }}
+          >
+            🗑️ Clear Tree
+          </button>
+        </div>
+      )}
     </div>
   );
 };

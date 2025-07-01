@@ -29,7 +29,6 @@ export class TimeStepNode {
     highlightColor: string[] = [];
     next: TimeStepNode[] | null = [];
     visitedLocations: Set<string> = new Set();
-    time : number = 0;
 
     constructor({
         id = nanoid(),
@@ -55,7 +54,33 @@ export class TimeStepNode {
         this.type = type;
         this.highlightColor = highlightColor;
         this.resolvedQuestions = resolvedQuestions;
-        this.time = 0;
+    }
+
+    equals(other: TimeStepNode): boolean {
+        if (this.query !== other.query) return false;
+        if (this.type !== other.type) return false;
+        
+        // Compare robot_map
+        if (this.robot_map.size !== other.robot_map.size) return false;
+        for (const [key, robot] of this.robot_map) {
+            const otherRobot = other.robot_map.get(key);
+            const robotEquals = robot instanceof Robot && otherRobot instanceof Robot && robot.equals(otherRobot);
+            if (!otherRobot || !robotEquals) return false;
+        }
+        
+        // Compare resolvedQuestions
+        if (this.resolvedQuestions.size !== other.resolvedQuestions.size) return false;
+        for (const [key, value] of this.resolvedQuestions) {
+            if (other.resolvedQuestions.get(key) != value) return false;
+        }
+        
+        // Compare visitedLocations
+        if (this.visitedLocations.size !== other.visitedLocations.size) return false;
+        for (const location of this.visitedLocations) {
+            if (!other.visitedLocations.has(location)) return false;
+        }
+                
+        return true;
     }
 
     longPrint(indent: string = "", isLast: boolean = true, layer: number = 0): string {
@@ -92,7 +117,7 @@ export class TimeStepNode {
         return Array.from(this.robot_map.entries())
             .map(([key, robot]) => {
                 const hasReachedDestination = reachedDestination(robot);
-                return `${key}->${hasReachedDestination ? robot.assignedLoc : 'x'}`;
+                return `${key}->${hasReachedDestination ? robot.assignedLoc : `(${robot.assignedLoc})`}`;
             }).join(', ');
     }
 

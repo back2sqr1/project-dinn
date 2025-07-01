@@ -5,12 +5,14 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import search from '@/utils/search';
 import { TimeStepNode } from '@/utils/TimeStepNode';
 import { createRobotMap } from '@/utils/RobotManager';
+import { reorganizeTreeLayout, LayoutNode } from '@/utils/layout';
 
 
 import { nanoid } from 'nanoid';
 import '@xyflow/react/dist/style.css';
 import '@/styles/override_xy.css';
 import XYTimeStepNode from '@/components/XYTimeStepNode';
+import CustomSmoothStepEdge from '@/components/CustomSmoothStepEdge';
 import Legend, { HighlightMode } from '@/components/Legend';
 import {
   ReactFlow,
@@ -29,6 +31,28 @@ import AsciiAnimation from '@/components/AsciiAnimation';
 import generateFrames from '@/utils/generateFrames';
 import { determine_cost, determine_min_time, getColor, highlightCost, highlightTime} from '@/utils/cost_and_time';
 
+// Wrapper component to access ReactFlow instance
+function ReactFlowWrapper({ 
+  children, 
+  onReorganizeLayout 
+}: { 
+  children: React.ReactNode; 
+  onReorganizeLayout: (reactFlowInstance: any) => void;
+}) {
+  const reactFlowInstance = useReactFlow();
+  
+  React.useEffect(() => {
+    // Pass the ReactFlow instance to parent when it's available
+    if (reactFlowInstance) {
+      onReorganizeLayout(reactFlowInstance);
+    }
+  }, [reactFlowInstance, onReorganizeLayout]);
+  
+  return <>{children}</>;
+}
+
+
+
 export default function Home() {
   /*
   Parsed Data - Contains Node set, Names, Edges, and Everything
@@ -42,9 +66,11 @@ export default function Home() {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [frames, setFrames] = useState<string[]>([]);
   const [highlightMode, setHighlightMode] = useState<HighlightMode>('none');
+  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
 
   const nodeTypes = useMemo(() => ({ xyTimeStepNode: XYTimeStepNode }), []);
+  const edgeTypes = useMemo(() => ({ customSmoothStep: CustomSmoothStepEdge }), []);
 
   const handleNodeSelect = useCallback((robotMap: Map<string, any>) => {
     setSelectedRobotMap(robotMap);
@@ -55,6 +81,22 @@ export default function Home() {
     // Update edges with new highlight mode
     
   }, []);
+
+  const handleReactFlowInstance = useCallback((instance: any) => {
+    setReactFlowInstance(instance);
+  }, []);
+
+  const handleReorganizeLayout = useCallback(() => {
+    const currentNodes = nodes as LayoutNode[];
+    const reorganizedNodes = reorganizeTreeLayout(currentNodes, edges);
+    setNodes(reorganizedNodes as Node[]);
+  }, [nodes, edges, setNodes, reactFlowInstance]);
+
+  const handleClearTree = useCallback(() => {
+    setNodes([]);
+    setEdges([]);
+    setSelectedRobotMap(null);
+  }, [setNodes, setEdges]);
 
   // Update all nodes and edges when highlight mode changes
   useEffect(() => {
@@ -183,13 +225,18 @@ export default function Home() {
             onEdgesChange={onEdgesChange}
             proOptions={{ hideAttribution: true }}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             >
-            <Controls />
-            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-            <Legend 
-              onHighlightModeChange={handleHighlightModeChange}
-              currentMode={highlightMode}
-            />
+            <ReactFlowWrapper onReorganizeLayout={handleReactFlowInstance}>
+              <Controls />
+              <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+              <Legend 
+                onHighlightModeChange={handleHighlightModeChange}
+                currentMode={highlightMode}
+                onReorganizeLayout={handleReorganizeLayout}
+                onClearTree={handleClearTree}
+              />
+            </ReactFlowWrapper>
             </ReactFlow>
         </div>
       </div>

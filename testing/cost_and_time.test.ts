@@ -14,3 +14,4 @@ test("Cost of a single node", () => {
     );
     expect(determine_cost(node)).toBe(0);
 });
+

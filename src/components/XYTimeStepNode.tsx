@@ -4,6 +4,7 @@ import { Robot } from '@/utils/Robot';
 import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
 import { getColor } from '@/utils/cost_and_time';
+import { calculateOptimalNodePosition, LayoutNode } from '@/utils/layout';
 
 interface XYTimeStepNodeProps {
     data: {
@@ -199,7 +200,26 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
 
     const addNode = useCallback((to: TimeStepNode, sourceHandleId: string) => {
         console.log(to.type, "TYPE");
-        const currentPosition = reactFlow.getNode(data.head?.id)?.position || { x: 0, y: 0 };
+        
+        // Get current node position
+        const currentNode = reactFlow.getNode(data.head?.id);
+        if (!currentNode) return;
+        
+        // Get all current nodes and edges for layout calculation
+        const allNodes = reactFlow.getNodes() as LayoutNode[];
+        const allEdges = reactFlow.getEdges();
+        
+        // Extract button index from sourceHandleId (e.g., "next-0" -> 0)
+        const buttonIndex = parseInt(sourceHandleId.split('-')[1]) || 0;
+        const buttonCount = data.head?.next?.length || 0;
+        
+        // Calculate optimal position using layout algorithm
+        const optimalPosition = calculateOptimalNodePosition(
+            currentNode as LayoutNode,
+            allNodes,
+            allEdges
+        );
+        
         const newNode = {
             id: to.id,
             type: 'xyTimeStepNode',
@@ -209,7 +229,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 onNodeSelect: data.onNodeSelect,
                 highlightMode: highlightMode
             },
-            position: { x: currentPosition.x + 200, y: currentPosition.y }
+            position: optimalPosition
         };
         
         reactFlow.addNodes(newNode);
@@ -218,15 +238,12 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             source: data.head?.id,
             target: to.id,
             sourceHandle: sourceHandleId,
-            data: { highlightColor: to.highlightColor },
+            data: { highlightColor: to.highlightColor, buttonIndex: buttonIndex, buttonCount: buttonCount},
             targetHandle: 'target',
             animated: true,
-            type: 'smoothstep',
+            type: 'customSmoothStep',
             style: { stroke: getColor(to.highlightColor, highlightMode) }
         }]);
-        
-        
-    
     }, [reactFlow, data.head?.id, data.onNodeSelect, highlightMode]);
 
     const deleteNode = useCallback(() => {

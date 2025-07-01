@@ -1,0 +1,19 @@
+{
+    "size": [10, 10],
+    "props": ["p", "p'", "p''"],
+    "locations": {
+        "a": [1, 0],
+        "b": [3, 0]
+    },
+    "edges": {
+        "p": ["p'", "p''"],
+        "p'": ["true", "false"],
+        "p''": ["false", "true"]
+    },
+    "prop_to_location": {
+        "p": ["a"],
+        "p'": ["b"],
+        "p''": ["b"]
+    },
+    "starting_prop": "p"
+}

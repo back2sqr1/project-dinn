@@ -22,6 +22,18 @@ export function createRobotMap(robots: any[]): RobotMap {
     return robotMap;
 }
 
+export function _knownProperties(visitedLocations: Set<string>): Set<string> {
+    const knownProperties = new Set<string>();
+    for (const location of visitedLocations) {
+        if (location_to_prop[location]) {
+            for (const prop of location_to_prop[location]) {
+                knownProperties.add(prop);
+            }
+        }
+    }
+    return knownProperties;
+}
+
 
 export class RobotManager {
 
@@ -116,8 +128,8 @@ export class RobotManager {
 
     // Updates the current time step with the new robot positions and resolved questions
     // and enqueues the next time step for processing
-    
 
+    
     // return true if the query is updated
     // return false if the query is not updated
 
@@ -126,14 +138,7 @@ export class RobotManager {
         const resolvedQuestions = currentTimeStep.resolvedQuestions;
         const robot_map = currentTimeStep.robot_map;
         
-        const knownProperties = new Set<string>();
-        for (const location of visitedLocations_thisStep) {
-            if (location_to_prop[location]) {
-                for (const prop of location_to_prop[location]) {
-                    knownProperties.add(prop);
-                }
-            }
-        }
+        const knownProperties = _knownProperties(visitedLocations_thisStep);
         const query = structuredClone(currentTimeStep.query);
 
         const possibleResolutions = this.possibleResolutions(0, Array.from(knownProperties), resolvedQuestions);
@@ -290,13 +295,26 @@ export class RobotManager {
             }
             
             const robotId = robotIds[robotIndex];
+            const knownProperties = _knownProperties(usedLocations);
+
             
             // Option 1: Don't assign this robot (stays still)
             generateAssignments(robotIndex + 1, currentAssignment, usedLocations);
             
             // Option 2: Assign robot to available locations
             for (const location of locations) {
-                if (!usedLocations.has(location)) {
+
+                // Check if the location not already used, and at least one property is not known
+                const props = location_to_prop[location];
+                let skip = true;
+                for (const prop of props || []) {
+                    if (!knownProperties.has(prop)) {
+                        skip = false; // Skip if the property is new 
+                        break;
+                    }
+                }
+
+                if (!usedLocations.has(location) && !skip) {
                     const newAssignment = new Map(currentAssignment);
                     const newUsedLocations = new Set(usedLocations);
                     newAssignment.set(robotId, location);
