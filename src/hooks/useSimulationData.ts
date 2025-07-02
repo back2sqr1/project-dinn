@@ -29,7 +29,7 @@ export function useLocalStorageData() {
 /**
  * Custom hook for managing search and tree state
  */
-export function useSearchTree(parsedData: any, robots: any[], allowWaiting: boolean) {
+export function useSearchTree() {
   const [selectedRobotMap, setSelectedRobotMap] = useState<Map<string, any> | null>(null);
 
   const handleNodeSelect = useCallback((robotMap: Map<string, any>) => {

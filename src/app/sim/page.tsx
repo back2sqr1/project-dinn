@@ -18,11 +18,7 @@ export default function Home() {
   const { parsedData, robots } = useLocalStorageData();
   
   // Handle tree selection state
-  const { selectedRobotMap, handleNodeSelect, clearSelection } = useSearchTree(
-    parsedData, 
-    robots, 
-    allowWaiting
-  );
+  const { selectedRobotMap, handleNodeSelect, clearSelection } = useSearchTree();
 
   // Handle ReactFlow tree state
   const {
