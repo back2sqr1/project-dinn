@@ -7,6 +7,10 @@ function isEqual(a: number, b: number): boolean {
     return Math.abs(a - b) < EPSILON;
 }
 
+
+// TODO Implement tie-breaking logic (time)
+// TODO Memoization of cost and time calculations
+
 // called from head
 const highlightColorCost = '#1e90ff'; // Blue color for highlighting
 const highlightColorTime = '#ffde21'; // Yellow color

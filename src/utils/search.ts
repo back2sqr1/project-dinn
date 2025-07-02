@@ -4,129 +4,230 @@ import { TimeStepNode } from '@/utils/TimeStepNode';
 import { RobotManager } from '@/utils/RobotManager';
 import { Robot } from './Robot';
 
+// Types for better type safety
+interface ParsedData {
+  locations: Record<string, [number, number]>;
+  prop_to_location: Record<string, string[]>;
+  starting_prop: string;
+  edges: Record<string, string[]>;
+  props: string[];
+}
 
-export let location_to_pin: Map<string, [number, number]> = new Map(); // map of locations with their coordinates
-export const pin_to_location: Map<[number, number], string> = new Map(); // map of pin coordinates to location names
-export let location_to_prop: { [key: string]: string[] } = {}; // map of locations to properties
+interface LocationMaps {
+  locationToPin: Map<string, [number, number]>;
+  pinToLocation: Map<[number, number], string>;
+  locationToProp: Record<string, string[]>;
+}
 
-// function printTimeSteps(robotManager: RobotManager) {
-//     if (!robotManager.head_time_step) {
-//         console.log("No time steps available.");
-//         return;
-//     }
-//     console.log("Time Steps:");
-//     console.log(robotManager.head_time_step.longPrint());
-// }
+// Constants
+const DISTANCE_THRESHOLD = 0.01;
 
-export default function search(parsedData : any, robots: Map<string, Robot>, allowWaiting: boolean = true): TimeStepNode | null {
-    if (!parsedData || !robots) {
-        return null;
+// Exported maps for backward compatibility
+export let location_to_pin: Map<string, [number, number]> = new Map();
+export const pin_to_location: Map<[number, number], string> = new Map();
+export let location_to_prop: { [key: string]: string[] } = {};
+
+/**
+ * Initializes location mapping from parsed data
+ */
+function initializeLocationMaps(parsedData: ParsedData): LocationMaps {
+  const locationToPin = _location_to_pin(parsedData);
+  const locationToProp = _location_to_prop(parsedData.prop_to_location || {});
+  const pinToLocation = new Map<[number, number], string>();
+
+  // Populate reverse mapping
+  for (const [location, pin] of locationToPin.entries()) {
+    pinToLocation.set(pin, location);
+  }
+
+  // Update global maps for backward compatibility
+  location_to_pin = locationToPin;
+  location_to_prop = locationToProp;
+  pin_to_location.clear();
+  for (const [pin, location] of pinToLocation.entries()) {
+    pin_to_location.set(pin, location);
+  }
+
+  return { locationToPin, pinToLocation, locationToProp };
+}
+
+/**
+ * Creates a new TimeStepNode with common properties
+ */
+function createTimeStepNode(
+  robotMap: Map<string, Robot>,
+  query: string,
+  type: 'Query' | 'Robot Assignment' | 'Robot Moving',
+  resolvedQuestions: Map<string, string>,
+  visitedLocations: Set<string>
+): TimeStepNode {
+  const node = new TimeStepNode({
+    id: nanoid(),
+    robot_map: structuredClone(robotMap),
+    query,
+    next: [],
+    type,
+    resolvedQuestions: structuredClone(resolvedQuestions)
+  });
+  node.visitedLocations = new Set([...visitedLocations]);
+  return node;
+}
+
+/**
+ * Checks if robots have reached their destinations and returns visited locations
+ */
+function checkRobotDestinations(
+  robotMap: Map<string, Robot>,
+  locationToPin: Map<string, [number, number]>
+): Set<string> {
+  const visitedLocations = new Set<string>();
+
+  for (const [, robot] of robotMap.entries()) {
+    if (robot.assignedLoc) {
+      const targetLocation = locationToPin.get(robot.assignedLoc);
+      if (targetLocation && euclidean_distance(robot.position, targetLocation) < DISTANCE_THRESHOLD) {
+        visitedLocations.add(robot.assignedLoc);
+      }
     }
-    location_to_pin = _location_to_pin(parsedData);
-    const props = properties_set(parsedData);
-    const prop_to_location = parsedData.prop_to_location || {};
-    location_to_prop = _location_to_prop(prop_to_location);
-    const starting_prop = parsedData.starting_prop || "p";
+  }
 
-    for (const [location, pin] of location_to_pin.entries()) {
-        location_to_pin.set(location, pin);
-        pin_to_location.set(pin, location);
-    }
+  return visitedLocations;
+}
 
-    // cast next_query to Map<string, Array<string>>
-    const next_query = new Map<string, Array<string>>(Object.entries(parsedData.edges));
-    const robot_manager = new RobotManager(robots, next_query, starting_prop, props);
-    robot_manager.allowWaiting = allowWaiting; // Set the allowWaiting parameter
+/**
+ * Processes robot movement and creates necessary nodes
+ */
+function processRobotMovement(
+  robotManager: RobotManager,
+  robotMap: Map<string, Robot>,
+  currentNode: TimeStepNode,
+  locationToPin: Map<string, [number, number]>,
+  allowWaiting: boolean
+): TimeStepNode {
+  let curNode = currentNode;
+
+  while (robotManager.countTravelingRobots(robotMap) > 0) {
+    robotManager.updateRobotPositions(robotMap);
     
-    /* Strategy:
-        1. Generate all combinations of robot assignments to locations for the starting property.
-        2. For each combination, assign robots to locations.
-        3. Update robot positions based on the earliest arrival time. (do all robots and have the robots wait)
-    */
-    while(robot_manager.time_step_queue.size() > 0) {
-        const currentTimeStep = robot_manager.time_step_queue.dequeue();
-        const robotMap_0 = currentTimeStep?.robot_map;
-        if (!robotMap_0) {
-            console.error("No robot map found in the current time step.");
-            continue;
-        }
-        let robotMap = structuredClone(robotMap_0);
+    const robotMovingNode = createTimeStepNode(
+      robotMap,
+      curNode.query,
+      'Robot Moving',
+      curNode.resolvedQuestions,
+      curNode.visitedLocations
+    );
 
-        const combinations = robot_manager.generateCombinations(currentTimeStep.query, robotMap, currentTimeStep.visitedLocations);
-        for (const combination of combinations) {
-        // for (let i = 0; i < 3; i++) {
-            
-            // Assign robots to locations based on the current combination
-            for( const [robotId, location] of combination.entries()) {
-                robot_manager.assignRobotToLocation(robotId, location, robotMap);
-            }
-            
-            /* update locations going to visit */
-            // adds cost and time
-
-            // Make Robot Moving Node as positions are updated
-            
-            let curNode = currentTimeStep;
-
-            while (robot_manager.countTravelingRobots(robotMap) > 0) {
-                const visitedLocations_thisStep = new Set<string>();
-
-
-                robot_manager.updateRobotPositions(robotMap);
-                const robot_moving_node = new TimeStepNode({
-                    id: nanoid(),
-                    robot_map: structuredClone(robotMap),
-                    query: curNode.query,
-                    next: [],
-                    type: 'Robot Moving',
-                    resolvedQuestions: structuredClone(curNode.resolvedQuestions)
-                });
-                robot_moving_node.visitedLocations = new Set([...curNode.visitedLocations]);
-                if (curNode.next === null) {
-                    curNode.next = [];
-                }
-                if (allowWaiting) {
-                    curNode.next.push(robot_moving_node);
-                    curNode = robot_moving_node; // Update current node to the new moving node
-                }
-
-                // Check if robot has reached its destination
-                for (const [robotId, robot] of robotMap.entries()) {
-                    if (robot.assignedLoc) {
-                        const targetLocation = location_to_pin.get(robot.assignedLoc);
-                        if (targetLocation && euclidean_distance(robot.position, targetLocation) < 0.01) {
-                            // Robot has reached its destination, mark it as assigned
-                            visitedLocations_thisStep.add(robot.assignedLoc);
-                        }
-                    }
-                }
-                // Make Query Node
-
-                const query_node = new TimeStepNode({
-                    id: nanoid(),
-                    robot_map: structuredClone(robotMap),
-                    query: curNode.query,
-                    next: [],
-                    type: 'Query',
-                    resolvedQuestions: structuredClone(curNode.resolvedQuestions)
-                });
-                query_node.visitedLocations = new Set([...curNode.visitedLocations]);
-
-                if (curNode.next === null) {
-                    curNode.next = [];
-                }
-                if(allowWaiting || curNode.type === "Robot Assignment") {
-                    curNode.next.push(query_node);
-                    curNode = query_node; // Update current node to the new query node
-                    robot_manager.updateTimeStep(curNode, visitedLocations_thisStep);
-                }
-            }
-
-            
-            robotMap = structuredClone(robotMap_0); // Reset robot map for the next combination
-        }
-
+    if (allowWaiting) {
+      curNode.next = curNode.next || [];
+      curNode.next.push(robotMovingNode);
+      curNode = robotMovingNode;
     }
-    // printTimeSteps(robot_manager); // Print the time steps for debugging
-    return robot_manager.head_time_step; // Return the head of the time step tree
+
+    const visitedLocations = checkRobotDestinations(robotMap, locationToPin);
+    
+    const queryNode = createTimeStepNode(
+      robotMap,
+      curNode.query,
+      'Query',
+      curNode.resolvedQuestions,
+      curNode.visitedLocations
+    );
+
+    if (allowWaiting || curNode.type === "Robot Assignment") {
+      curNode.next = curNode.next || [];
+      curNode.next.push(queryNode);
+      curNode = queryNode;
+      robotManager.updateTimeStep(curNode, visitedLocations);
+    }
+  }
+
+  return curNode;
+}
+
+/**
+ * Processes a single robot combination
+ */
+function processCombination(
+  combination: Map<string, string>,
+  robotManager: RobotManager,
+  currentTimeStep: TimeStepNode,
+  robotMapOriginal: Map<string, Robot>,
+  locationToPin: Map<string, [number, number]>,
+  allowWaiting: boolean
+): void {
+  const robotMap = structuredClone(robotMapOriginal);
+
+  // Assign robots to locations
+  for (const [robotId, location] of combination.entries()) {
+    robotManager.assignRobotToLocation(robotId, location, robotMap);
+  }
+
+  processRobotMovement(robotManager, robotMap, currentTimeStep, locationToPin, allowWaiting);
+}
+
+/**
+ * Main search algorithm that processes robot assignments and movements
+ * 
+ * Strategy:
+ * 1. Generate all combinations of robot assignments to locations for the starting property
+ * 2. For each combination, assign robots to locations
+ * 3. Update robot positions based on the earliest arrival time (allow robots to wait)
+ * 
+ * @param parsedData - The parsed data containing locations, properties, and edges
+ * @param robots - Map of robot IDs to Robot objects
+ * @param allowWaiting - Whether robots can wait during movement
+ * @returns The head of the time step tree or null if invalid input
+ */
+export default function search(
+  parsedData: ParsedData | any, 
+  robots: Map<string, Robot>, 
+  allowWaiting: boolean = true
+): TimeStepNode | null {
+  // Input validation
+  if (!parsedData || !robots || robots.size === 0) {
+    return null;
+  }
+
+  // Initialize location mappings
+  const { locationToPin } = initializeLocationMaps(parsedData);
+  
+  // Extract required properties
+  const props = properties_set(parsedData);
+  const startingProp = parsedData.starting_prop || "p";
+  const nextQuery = new Map<string, string[]>(Object.entries(parsedData.edges || {}));
+
+  // Initialize robot manager
+  const robotManager = new RobotManager(robots, nextQuery, startingProp, props);
+  robotManager.allowWaiting = allowWaiting;
+
+  // Process all time steps
+  while (robotManager.time_step_queue.size() > 0) {
+    const currentTimeStep = robotManager.time_step_queue.dequeue();
+    
+    if (!currentTimeStep?.robot_map) {
+      console.error("No robot map found in the current time step.");
+      continue;
+    }
+
+    const originalRobotMap = currentTimeStep.robot_map;
+    const combinations = robotManager.generateCombinations(
+      currentTimeStep.query, 
+      originalRobotMap, 
+      currentTimeStep.visitedLocations
+    );
+
+    // Process each combination
+    for (const combination of combinations) {
+      processCombination(
+        combination,
+        robotManager,
+        currentTimeStep,
+        originalRobotMap,
+        locationToPin,
+        allowWaiting
+      );
+    }
+  }
+
+  return robotManager.head_time_step;
 }
