@@ -10,10 +10,6 @@ import createGraphFromBeliefDiagram from '@/utils/createGraphFromBeliefDiagram';
 const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
 
 const initialParsed = {
-  "author": "David Zhang",
-  "institution": "Texas A&M University",
-  "title": "Belief Diagram 2 (Lights)",
-  "query": "Is the light on?",
   "size": [50, 10],
   "starting_prop": "p",
   "props": [

@@ -5,7 +5,8 @@ import { nanoid } from 'nanoid';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
 import { getColor } from '@/utils/cost_and_time';
 import { calculateOptimalNodePosition, LayoutNode } from '@/utils/layout';
-import { calculateNodeWidth, getSelectedStyle } from '@/utils/nodeCalculations';
+import { getSelectedStyle } from '@/utils/nodeFormatters';
+
 import { 
     EmptyNode, 
     NodeHeader, 
@@ -62,17 +63,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
             allEdges
         );
         
-        const nodeWidth = calculateNodeWidth({
-            robot_map: to.robot_map,
-            query: to.query,
-            next: to.next || [],
-            type: to.type,
-            resolvedQuestions: to.resolvedQuestions,
-            id: to.id,
-            getTime: to.getTime,
-            highlightColor: to.highlightColor
-        });
-        
         const newNode = {
             id: to.id,
             type: 'xyTimeStepNode',
@@ -83,7 +73,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 highlightMode: highlightMode
             },
             position: optimalPosition,
-            width: nodeWidth
         };
         
         reactFlow.addNodes(newNode);
@@ -113,7 +102,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
     const { robot_map, next, id, query, type, resolvedQuestions } = data.head;
     const isLeafNode = !next || next.length === 0;
     const selectedStyle = getSelectedStyle(isSelected);
-    const nodeWidth = calculateNodeWidth(data.head);
 
     return (
         <div 
@@ -122,7 +110,6 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 ...selectedStyle,
                 color: getColor(data.head.highlightColor, highlightMode),
                 borderColor: getColor(data.head.highlightColor, highlightMode),
-                width: nodeWidth
             }} 
             title={id} 
             onClick={handleNodeClick}
@@ -131,6 +118,9 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 onClick={deleteNode} 
                 className="delete-button" 
                 title="Delete node"
+                style={{
+                    backgroundColor: 'transparent',
+                }}
             >
                 ×
             </button>
@@ -154,7 +144,7 @@ const XYTimeStepNode = memo((props: XYTimeStepNodeProps) => {
                 )}
             </div>
 
-            {!isLeafNode && next && next.length > 0 && (
+            {!isLeafNode && (
                 <div className="next-buttons-container">
                     {next.map((node, nodeIndex) => (
                         <NextNodeButton

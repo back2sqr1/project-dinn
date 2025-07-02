@@ -43,19 +43,17 @@ export default function Home() {
         </span>
         
         <article>
-          <header>
-            <h1>
-              <Typewriter
-                words={['Parameters']}
-                loop={1}
-                cursor
-                cursorStyle=''
-                typeSpeed={30}
-                deleteSpeed={50}
-                delaySpeed={1000}
-              />
-            </h1>
-          </header>
+          <h1>
+            <Typewriter
+              words={['Parameters']}
+              loop={1}
+              cursor
+              cursorStyle=''
+              typeSpeed={30}
+              deleteSpeed={50}
+              delaySpeed={1000}
+            />
+          </h1>
           <hr />
           
           <form onSubmit={handleSubmit}>

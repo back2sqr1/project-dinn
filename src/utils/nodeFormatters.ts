@@ -7,6 +7,14 @@ export function getButtonContent(node: TimeStepNode, parentType: string): string
     return node.toString(parentType);
 }
 
+export function getSelectedStyle(isSelected: boolean) {
+    return {
+        transform: isSelected ? 'scale(1.01)' : 'scale(1)',
+        boxShadow: isSelected ? '0 4px 12px rgb(6, 147, 6)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
+    };
+}
+
+
 /**
  * Gets the type abbreviation for display
  */

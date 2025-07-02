@@ -69,11 +69,9 @@ export default function Home() {
 
         <article>
           <br/>
-          <div className="p-2 ">
+          <div className="p-2 " style={{ fontSize: "10px" }}>
             <code>
-              <pre>
                 {JSON.stringify(parsedData, null, 2)}
-              </pre>
             </code>
             <br/>
             <code>

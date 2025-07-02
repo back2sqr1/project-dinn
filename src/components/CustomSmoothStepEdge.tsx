@@ -3,15 +3,11 @@ import { BaseEdge, EdgeProps } from '@xyflow/react';
 
 export default function CustomSmoothStepEdge(props: EdgeProps) {
   const {
-    id,
     sourceX,
     sourceY,
     targetX,
     targetY,
-    sourcePosition,
-    targetPosition,
     style = {},
-    data,
     markerEnd,
     animated
   } = props;
@@ -25,10 +21,7 @@ export default function CustomSmoothStepEdge(props: EdgeProps) {
   // Circuit-style routing: each edge takes a different horizontal route
   const baseRouteDistance = (targetX - sourceX) / 2; // Base distance before turning
   const routeSpacing = 5; // Space between routing lanes
-  const routeOffset = buttonIndex * routeSpacing;
-
-  // TODO: Calculate maximum length based on button count (of all edges in the same column)
-  
+  const routeOffset = buttonIndex * routeSpacing;  
 
   const maxLengthDistance = sourceX + baseRouteDistance + buttonCount * routeSpacing;
 
